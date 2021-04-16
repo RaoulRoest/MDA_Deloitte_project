@@ -43,7 +43,7 @@ class DataLoader():
     
     def _load_general_data_file_as_df(self, filepath, headers):        
         if(os.path.exists(filepath)):
-            df = pd.read_csv(filepath, sep="|", names=headers)
+            df = pd.read_csv(filepath, sep="|", header=None, names=headers)
             
             return df
         else:

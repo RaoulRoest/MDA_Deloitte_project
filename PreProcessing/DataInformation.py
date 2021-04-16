@@ -26,6 +26,11 @@ def get_origination_data_headers():
         'seller_name',
         'servicer_name', 
         'flag_sc',
+        'pre-HARP',
+        'Program_indicator',
+        'Harp_indicator',
+        'Property_valuation_method',
+        'Interest_only_indicator',
     ]
 
 def get_monthly_performance_headers():
@@ -53,4 +58,11 @@ def get_monthly_performance_headers():
         'misc_costs',
         'actual_loss', 
         'modcost',
+        'step_mod_flag',
+        'defered_payment_plan',
+        'eltv',
+        'zero_balance_removal',
+        'deliquent_accrued_interest',
+        'delinquency_due_to_disaster',
+        'borrower_assistance_code',
     ]
