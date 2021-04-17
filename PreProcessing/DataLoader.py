@@ -30,20 +30,26 @@ class DataLoader():
     def load_origination_data_file(self, year):
         filepath = os.path.join(self._dataDir, f"sample_orig_{year}.txt")
         headers = datInfo.get_origination_data_headers()
-        df = self._load_general_data_file_as_df(filepath=filepath, headers=headers)
+        dtypes = datInfo.get_orig_dtypes()
+        typeDict = {k : v for k, v in zip(headers, dtypes)}
+        
+        df = self._load_general_data_file_as_df(filepath=filepath, headers=headers, dtypes=typeDict)
             
         return df
     
     def load_monthly_performance_data_file(self, year):
         filepath = os.path.join(self._dataDir, f"sample_svcg_{year}.txt")
         headers = datInfo.get_monthly_performance_headers()
-        df = self._load_general_data_file_as_df(filepath=filepath, headers=headers)
+        dtypes = datInfo.get_monthly_dtypes()
+        typeDict = {k : v for k, v in zip(headers, dtypes)}
+        
+        df = self._load_general_data_file_as_df(filepath=filepath, headers=headers, dtypes=typeDict)
 
         return df
     
-    def _load_general_data_file_as_df(self, filepath, headers):        
+    def _load_general_data_file_as_df(self, filepath, headers, dtypes):        
         if(os.path.exists(filepath)):
-            df = pd.read_csv(filepath, sep="|", header=None, names=headers)
+            df = pd.read_csv(filepath, sep="|", header=None, names=headers, dtype=dtypes)
             
             return df
         else:
