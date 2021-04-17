@@ -10,11 +10,10 @@ from DataLoader import DataLoader
 dl = DataLoader()
 dc = DataCleaner()
 
-dfOriginate = dl.load_origination_data_file(2020)
-print(dfOriginate.iloc[2])
+dfOrig = dl.load_origination_data_file(2020)
+dfMonthly = dl.load_monthly_performance_data_file(2020)
 
-ids = dc.get_ids_to_remove(dfOriginate)
+dfMonthlyClean, dfOrigClean = dc.clean_data(dfOrig, dfMonthly)
 
-print(ids)
-# dfMonthly = dl.load_monthly_performance_data_file(2020)
-# print(dfMonthly.iloc[0])
+all_years = range(2013, 2021)
+print([y for y in all_years])
