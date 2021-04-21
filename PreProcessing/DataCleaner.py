@@ -22,7 +22,7 @@ class DataCleaner():
         dfOrigClean = dfOrig[~dfOrig["id_loan"].isin(ids)].copy().reset_index()
         dfMonthlyClean = dfMonthly[~dfMonthly["id_loan"].isin(ids)].copy().reset_index()
         
-        return dfOrig, dfMonthly
+        return dfOrigClean, dfMonthlyClean
         
     def _get_ids(self, df, condition):
         return df[condition].id_loan.unique().tolist()
