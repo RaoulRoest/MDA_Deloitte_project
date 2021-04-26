@@ -73,3 +73,8 @@ class DataLoader():
     
     def get_all_monthly_performance_years(self, years):    
         return self._get_multiple_files(years, self.load_monthly_performance_data_file)
+
+    def get_fifteen_years_mortgage_rate(self):
+        filepath = os.path.join(self._dataDir, "MORTGAGE15US_adjusted.xlsx")
+        return pd.read_excel(filepath).set_index("observation_date")
+        
