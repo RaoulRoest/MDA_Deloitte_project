@@ -15,6 +15,7 @@ from DataCleaner import DataCleaner
 
 import GraphHelper as gh
 import ConsoleWriter as logger
+import InputGraphData.InputReader as inputReader
 
 def get_data(years):
     # years = range(2013, 2021) #Python uses 0-indexing, hence this will be [2013, 2020, steps=1]
@@ -35,11 +36,13 @@ def get_data(years):
         
     return dfOrigClean, dfMonthlyClean
 
-def hist_feature(df, feature, bins=10):
+def hist_feature(df, feature, bins=100, max_ticks=20):
     dfGraph = df[feature].copy()
     
     fig, ax = plt.subplots()
     dfGraph.hist(ax=ax, grid=False, xrot=90, bins=bins)
+    xloc = plt.MaxNLocator(max_ticks)
+    ax.xaxis.set_major_locator(xloc)
     
     gh.set_plot_params(ax, f"Histogram of {feature} of the orig data", feature)
     return fig
@@ -57,13 +60,17 @@ def plot_monthly_feature_over_time(dfMonthly, feature, loan_id=None):
     
     fig, ax = plt.subplots()
     for l in loans:
-        dfMonthly.loc[l, feature].plot(ax=ax, rot=90)
+        try:
+            dfMonthly.loc[l, feature].plot(ax=ax, rot=90, label=l)
+        except:
+            logger.warning(f"THE FEATURE {feature} WAS NOT PLOTTED", level=1)
     
     name_addition = get_loan_info(loan_id)
     gh.set_plot_params(ax, 
                        title=f"Plot over time for loans: {name_addition}", 
                        xlabel="YearMonth", 
-                       ylabel=f"{feature}")
+                       ylabel=f"{feature}",
+                       legend=True)
     return fig
 
 def get_loan_info(loans):
@@ -91,12 +98,33 @@ def scatter_features(df, feature1, feature2):
 
 def boxplot_features(df, featureList):
     fig, ax = plt.subplots()
-    df.boxplot(column=featureList, ax=ax)
+    toPlot, notToPlot = check_dtypes(df, featureList)
+    
+    if toPlot:
+        df.boxplot(column=toPlot, ax=ax)
+    else:
+        logger.warning("THERE WERE NO FEATURES TO PLOT.", level=1)
+        
+    if notToPlot:
+        featuresNotPlotted = "----".join(notToPlot)
+        logger.warning(f"THE FOLLOWING FEATURES WERE NOT PLOTTED :: {featuresNotPlotted}", level=1)
     
     gh.set_plot_params(ax,
                        title="Boxplot of several features",
                        xlabel="feature name")
     return fig
+
+def check_dtypes(df, featureList):
+    numerics = []
+    nonNumerics = []
+
+    for f in featureList:
+        if(pd.api.types.is_numeric_dtype(df[f])):
+            numerics.append(f)
+        else:
+            nonNumerics.append(f)
+    
+    return numerics, nonNumerics
 
 def main(years, plotOrigFeatures, plotMonthlyFeatures, scatterOrigFeatures, boxplotOrigFeatures):
     """
@@ -115,6 +143,8 @@ def main(years, plotOrigFeatures, plotMonthlyFeatures, scatterOrigFeatures, boxp
         for column in plotOrigFeatures["features"]:
             logger.info(f"Plot feature: {column}", level=1)
             fig = hist_feature(dfOrig, column)
+            
+            fig.tight_layout()
             gh.save_plot(fig, f"{column}_histogram", "HistogramsOriginateFeatures")
             plt.close()
     
@@ -127,6 +157,8 @@ def main(years, plotOrigFeatures, plotMonthlyFeatures, scatterOrigFeatures, boxp
             
             name_addition = get_loan_info(loans)
             filename = f"{column}_monthly_plot_loan_{name_addition}"
+            
+            fig.tight_layout()
             gh.save_plot(fig, filename, "PlotMonthlyFeaturesOverTime")
             plt.close()
 
@@ -136,6 +168,7 @@ def main(years, plotOrigFeatures, plotMonthlyFeatures, scatterOrigFeatures, boxp
             logger.info(f"Scatter {f1} against {f2}")
             fig = scatter_features(dfOrig, f1, f2)
             
+            fig.tight_layout()
             filename = f"{f1}_{f2}_scatter_plot"
             gh.save_plot(fig, filename, "ScatterOrigData")
             plt.close()
@@ -144,6 +177,7 @@ def main(years, plotOrigFeatures, plotMonthlyFeatures, scatterOrigFeatures, boxp
         logger.info("Make boxplot of features in originate data")
         fig = boxplot_features(dfOrig, boxplotOrigFeatures["features"])
         
+        fig.tight_layout()
         filename = f"Boxplot_of_several_features"
         gh.save_plot(fig, filename, "BoxplotOrigData")
         plt.close()
@@ -151,42 +185,37 @@ def main(years, plotOrigFeatures, plotMonthlyFeatures, scatterOrigFeatures, boxp
             
 """
 =============================
-Parameters
+Parameters:
+Parameters are read from the csv files 
+in the directory: 
+\\InputGraphData
+
+see --> InputReader.py 
+for more info.
 =============================
 """
 years = [2013]
 plotOrigFeatures = {
     "plot" : False, 
-    "features" : [
-        "fico",
-    ],
+    "features" : inputReader.read_orig_features(),
 }
 
 plotMonthlyFeatures = {
-    "plot" : False,
-    "features" : [
-        "current_upb",
-    ],
-    "loan" : [
-        "F113Q3265933",
-        "F113Q1100382",
-    ],
+    "plot" : True,
+    "features" : inputReader.read_monthly_features(),
+    "loan" : inputReader.read_loans()
 }
 
 scatterOrigFeatures = {
-    "plot" : False,
-    "features" : [
-        ("fico", "flag_fthb"),
-    ],
+    "plot" : True,
+    "features" : inputReader.read_orig_scatter_features()
 }
 
 boxplotOrigFeatures = {
     "plot" : True, 
-    "features" :[
-        "fico",
-        "int_rt",
-    ],
+    "features" : inputReader.read_orig_features(),
 }
+
 """
 =============================
 Run main function/script

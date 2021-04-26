@@ -31,9 +31,12 @@ def save_plot(fig, filename, identifier=None):
     
     fig.savefig(filePath)
 
-def set_plot_params(ax, title, xlabel, ylabel=None):
+def set_plot_params(ax, title, xlabel, ylabel=None, legend=False):
     ax.set_title(title)
     ax.set_xlabel(xlabel)
     
     if(not (ylabel is None)):
         ax.set_ylabel(ylabel)
+    
+    if(legend):
+        ax.legend(loc="upper right", bbox_to_anchor=(1.05, 1))
