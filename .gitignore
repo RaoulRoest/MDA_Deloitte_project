@@ -133,6 +133,7 @@ dmypy.json
 
 # JupyterNotebooks dir
 JupyterNotebooks/
+*.ipynb
 
 # Data files
 Data/*.txt
