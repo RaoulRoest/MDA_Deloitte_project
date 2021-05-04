@@ -65,18 +65,15 @@ def initialize(dfOrig, dfMonthly):
                                                           on="id_loan")
     return dfInit
     
-def calculate_monthly_upb_percentages(upbs, orig_upbs):
+def calculate_monthly_upb_percentages(dfPPM):
     """
     Calculate :: 
     (shifted_current_upb - current_upb) / orig_upb
     """
-    
-    upbs_shifted = Helpers.shift_numpy_array(upbs, 1) # shift the array one position to the right
-    upbs_shifted[np.isnan(upbs_shifted)] = 0 # set NaN's entries equal to zero
-    
-    # return calculation of
-    # (shifted_current_upb - current_upb) / orig_upb
-    return np.divide(upbs_shifted - upbs, orig_upbs, out=np.ones_like(upbs)) 
+    columnName = "FlagFullPrepayment"
+    condition = dfPPM["current_upb"] == 0 & dfPPM["mths_remng"] == 0
+    dfPPM[columnName] = False
+    dfPPM[condition, columnName] = True
     
 def calculate_prepayment_info(dfOrig, dfMonthly):
     """
