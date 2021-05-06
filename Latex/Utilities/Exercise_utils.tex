@@ -1,0 +1,21 @@
+% counters
+\newcounter{exercise}
+\newcounter{subexercise}
+
+\newcommand{\newSub}{
+    \refstepcounter{subexercise}\par\medskip
+    \noindent
+    \textbf{\theexercise.\alph{subexercise})}
+}
+
+% Environments
+\newenvironment{exercise}{
+    \refstepcounter{exercise}\par\medskip
+    \noindent
+    \textbf{Exercise~\theexercise}
+    \newline
+    \noindent
+}{
+    \medskip
+    \setcounter{subexercise}{0}
+}

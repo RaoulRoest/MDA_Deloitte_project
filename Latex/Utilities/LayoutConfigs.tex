@@ -1,0 +1,24 @@
+%-------------------------------------------------------------------------------------------------------
+
+\renewcommand{\contentsname}{Table of contents}
+
+\def\mapmatter{%
+    \pagenumbering{gobble}
+}%
+
+\def\mainmatter{%
+    \pagenumbering{arabic}
+    \setcounter{page}{1}
+    \setcounter{section}{0}
+    \renewcommand{\thesection}{\arabic{section}}
+}%
+
+\def\backmatter{%
+    \setcounter{section}{0}
+    \renewcommand{\thesection}{\Alph{section}}
+}%
+
+
+
+%-------------------------------------------------------------------------------------------------------
+

@@ -131,11 +131,24 @@ dmypy.json
 # Visual studio code
 .vscode/
 
+# Rstudio
+*.Rhistory
+
 # JupyterNotebooks dir
 JupyterNotebooks/
+*.ipynb
 
 # Data files
 Data/*.txt
 
 # Working with excel
 ~$*.xlsx
+
+# Latex
+*.toc
+*.xdv
+*.synctex.gz
+*.out
+*.fls 
+*.fdb_latexmk
+*.aux
