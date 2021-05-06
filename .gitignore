@@ -131,6 +131,9 @@ dmypy.json
 # Visual studio code
 .vscode/
 
+# Rstudio
+*.Rhistory
+
 # JupyterNotebooks dir
 JupyterNotebooks/
 *.ipynb
