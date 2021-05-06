@@ -1,18 +1,19 @@
 import sys 
 import os 
-cleanerPath = os.path.join(os.path.dirname(__file__), "..", "..", "PreProcessing")
+curDir = os.path.dirname(__file__)
+cleanerPath = os.path.join(curDir, "..", "..", "..", "PreProcessing")
 sys.path.append(cleanerPath)
+assertionsPath = os.path.join(curDir, "..", "..", "Common")
+sys.path.append(assertionsPath)
 
 import pytest
 import pandas as pd 
 import numpy as np
 
 # Custom class
+from Assertions import assert_items_in_list
 from DataCleaner import DataCleaner
 import DataInformation as di 
-
-def assert_items_in_list(l1, l2):
-    assert set(l1) == set(l2)
 
 def test_DataCleaner_should_remove_unclean_data():
     # Initialize
@@ -33,8 +34,8 @@ def test_DataCleaner_should_remove_unclean_data():
     
 def get_test_data():
     curDir = os.path.dirname(__file__)
-    origFilePath = os.path.join(curDir, "..", "TestData", "OrigTestFile.xlsx")
-    monthlyFilePath = os.path.join(curDir, "..", "TestData", "MonthlyTestFile.xlsx")
+    origFilePath = os.path.join(curDir, "..", "..", "TestData", "OrigTestFile.xlsx")
+    monthlyFilePath = os.path.join(curDir, "..", "..", "TestData", "MonthlyTestFile.xlsx")
 
     headersOrig = di.get_origination_data_headers()
     dtypesOrig = di.get_orig_dtypes()

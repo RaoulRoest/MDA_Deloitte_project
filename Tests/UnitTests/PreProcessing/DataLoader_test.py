@@ -1,6 +1,6 @@
 import sys 
 import os 
-preProcessing_dir = os.path.join(os.path.dirname(__file__), "..", "..", "PreProcessing")
+preProcessing_dir = os.path.join(os.path.dirname(__file__), "..", "..", "..", "PreProcessing")
 sys.path.append(preProcessing_dir)
 
 import pytest
