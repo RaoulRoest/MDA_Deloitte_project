@@ -1,139 +1,32 @@
-import numpy as np 
+import numpy as np
+import pandas as pd
 
-def get_origination_data_headers():
-    return [
-        'fico',
-        'dt_first_pi',
-        'flag_fthb',
-        'dt_matr',
-        'cd_msa',
-        'mi_pct',
-        'cnt_units',
-        'occpy_sts',
-        'cltv',
-        'dti',
-        'orig_upb',
-        'ltv',
-        'int_rt',
-        'channel',
-        'ppmt_pnlty',
-        'prod_type',
-        'st', 
-        'prop_type',
-        'zipcode',
-        'id_loan',
-        'loan_purpose', 
-        'orig_loan_term',
-        'cnt_borr',
-        'seller_name',
-        'servicer_name', 
-        'flag_sc',
-        'pre-HARP',
-        'Program_indicator',
-        'Harp_indicator',
-        'Property_valuation_method',
-        'Interest_only_indicator',
-    ]
+from pydoc import locate
 
-def get_monthly_performance_headers():
-    return [
-        'id_loan',
-        'svcg_cycle',
-        'current_upb',
-        'delq_sts',
-        'loan_age',
-        'mths_remng', 
-        'repch_flag',
-        'flag_mod', 
-        'cd_zero_bal', 
-        'dt_zero_bal',
-        'current_int_rt',
-        'non_int_brng_upb',
-        'dt_lst_pi',
-        'mi_recoveries', 
-        'net_sale_proceeds',
-        'non_mi_recoveries',
-        'expenses', 
-        'legal_costs', 
-        'maint_pres_costs',
-        'taxes_ins_costs',
-        'misc_costs',
-        'actual_loss', 
-        'modcost',
-        'step_mod_flag',
-        'defered_payment_plan',
-        'eltv',
-        'zero_balance_removal',
-        'deliquent_accrued_interest',
-        'delinquency_due_to_disaster',
-        'borrower_assistance_code',
-    ]
+def get_header_info_type_dict():
+    return {
+        "Header" : str,
+        "FullName" : str,
+        "dType" : type, 
+        "ColumnPosition" : int
+    }    
+
+def get_data_dict(filePath):
+    # Read dict from xlsx file
+    headerDict = get_header_info_type_dict()
+    df = pd.read_excel(filePath, dtype=headerDict)
     
-def get_orig_dtypes():
-    return [
-        int,
-        str,
-        str,
-        str,
-        np.float_,
-        np.float_,
-        int,
-        str,
-        np.float_,
-        np.float_,
-        np.float_,
-        np.float_,
-        np.float_,
-        str,
-        str,
-        str,
-        str,
-        str,
-        str,
-        str,
-        str,
-        int,
-        int,
-        str,
-        str,
-        str,
-        str,
-        str,
-        str,
-        int,
-        str,
-    ]
-
-def get_monthly_dtypes():
-    return [
-        str,
-        str,
-        np.float_,
-        str,
-        int,
-        int,
-        str,
-        str,
-        np.float_,
-        str,
-        np.float_,
-        np.float_,
-        str,
-        np.float_,
-        np.float_,
-        np.float_,
-        np.float_,
-        np.float_,
-        np.float_,
-        np.float_,
-        np.float_,
-        np.float_,
-        np.float_,
-        str,
-        str,
-        np.float_,
-        np.float_,
-        np.float_,
-        str,
-        str,
-    ]
+    # Strip whitespaces from strings
+    df["Header"] = df["Header"].str.strip()
+    df["FullName"] = df["FullName"].str.strip()
+    df["dType"] = df["dType"].str.strip()
+    
+    # Set index for mapping
+    df.set_index("Header", inplace=True)
+    
+    # Get correct class corresponding to type (with locate function)
+    dtypeDict = df["dType"].to_dict()
+    dtypeDict = {k : locate(v) for k, v in dtypeDict.items()} 
+    
+    return dtypeDict
+    
