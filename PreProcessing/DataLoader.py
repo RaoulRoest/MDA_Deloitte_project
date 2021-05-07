@@ -22,16 +22,34 @@ class DataLoader():
         else:
             self._dataDir = wrkdir
         
+        self._origHeaderDictName = "OriginateHeaderMapping.xlsx"
+        self._monthlyHeaderDictName = "MonthlyHeaderMapping.xlsx"
+                
     def get_data_directory(self):
         curDir = os.path.dirname(__file__)
         
         return os.path.join(curDir, "..", "Data")
     
+    def _get_header_dict(self, file="Orig"):
+        if(file == "Orig"):
+            if(not hasattr(self, '_origHeaderDict')):
+                headerFilePath = os.path.join(self._dataDir, self._origHeaderDictName)
+                self._origHeaderDict = datInfo.get_data_dict(headerFilePath)
+            
+            return self._origHeaderDict
+        
+        elif(file == "Monthly"):
+            if(not hasattr(self, '_monthlyHeaderDict')):
+                headerFilePath = os.path.join(self._dataDir, self._monthlyHeaderDictName)
+                self._monthlyHeaderDict = datInfo.get_data_dict(headerFilePath)
+            
+            return self._monthlyHeaderDict            
+    
     def load_origination_data_file(self, year):
         filepath = os.path.join(self._dataDir, f"sample_orig_{year}.txt")
-        headers = datInfo.get_origination_data_headers()
-        dtypes = datInfo.get_orig_dtypes()
-        typeDict = {k : v for k, v in zip(headers, dtypes)}
+        
+        typeDict = self._get_header_dict(file="Orig")
+        headers = [k for k, v in typeDict.items()]
         
         df = self._load_general_data_file_as_df(filepath=filepath, headers=headers, dtypes=typeDict)
             
@@ -39,9 +57,9 @@ class DataLoader():
     
     def load_monthly_performance_data_file(self, year):
         filepath = os.path.join(self._dataDir, f"sample_svcg_{year}.txt")
-        headers = datInfo.get_monthly_performance_headers()
-        dtypes = datInfo.get_monthly_dtypes()
-        typeDict = {k : v for k, v in zip(headers, dtypes)}
+
+        typeDict = self._get_header_dict(file="Monthly")
+        headers = [k for k, v in typeDict.items()]
         
         df = self._load_general_data_file_as_df(filepath=filepath, headers=headers, dtypes=typeDict)
 
