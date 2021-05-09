@@ -11,30 +11,10 @@ import matplotlib.pyplot as plt
 
 # Custom modules
 from DataLoader import DataLoader
-from DataCleaner import DataCleaner
 
 import GraphHelper as gh
 import ConsoleWriter as logger
 import InputGraphData.InputReader as inputReader
-
-def get_data(years):
-    # years = range(2013, 2021) #Python uses 0-indexing, hence this will be [2013, 2020, steps=1]
-    
-    dl = DataLoader()
-    dc = DataCleaner()
-    
-    dfOrig = dl.get_all_originate_years(years)
-    dfMonthly = dl.get_all_monthly_performance_years(years)
-    
-    dfOrigClean, dfMonthlyClean = dc.clean_data(dfOrig, dfMonthly)
-    
-    dfMonthlyClean.dropna(axis='columns', inplace=True) #Drop the columns with na values. 
-    
-    # Set indexes for faster searches
-    dfMonthlyClean.set_index(["id_loan", "svcg_cycle"], inplace=True) #Index on loan index, and timestep. 
-    dfOrigClean.set_index("id_loan", inplace=True) #Index on loan index
-        
-    return dfOrigClean, dfMonthlyClean
 
 def hist_feature(df, feature, bins=100, max_ticks=20):
     dfGraph = df[feature].copy()
@@ -107,7 +87,8 @@ def boxplot_features(df, featureList):
         
     if notToPlot:
         featuresNotPlotted = "----".join(notToPlot)
-        logger.warning(f"THE FOLLOWING FEATURES WERE NOT PLOTTED :: {featuresNotPlotted}", level=1)
+        message = f"THE FOLLOWING FEATURES WERE NOT PLOTTED :: {featuresNotPlotted} BECAUSE THEY ARE NOT NUMERIC."
+        logger.warning(message=message, level=1)
     
     gh.set_plot_params(ax,
                        title="Boxplot of several features",
@@ -136,7 +117,8 @@ def main(years, plotOrigFeatures, plotMonthlyFeatures, scatterOrigFeatures, boxp
 
     logger.info("Start computations")
     logger.info("Get data")
-    dfOrig, dfMonthly = get_data(years)
+    loader = DataLoader()
+    dfOrig, dfMonthly = loader.get_data_set(years=years)
     
     if(plotOrigFeatures["plot"]):
         logger.info("Plot histograms of originate data")

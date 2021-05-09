@@ -4,6 +4,7 @@ import pandas as pd
 
 # Custom modules
 import DataInformation as datInfo 
+import DataCleaner as cleaner
 
 class DataLoader():
     """
@@ -95,4 +96,24 @@ class DataLoader():
     def get_fifteen_years_mortgage_rate(self):
         filepath = os.path.join(self._dataDir, "MORTGAGE15US_adjusted.xlsx")
         return pd.read_excel(filepath).set_index("observation_date")
+    
+    def get_data_set(self, years):
+        """
+        Function that provides the cleaned data set. 
+        Moreover, indices on the dataframes are set to: 
+        Originate data: 
+            - id_loan
+        Monthly data:
+            - id_loan
+            - svcg_cycle
+        """
+        dfOrig = self.get_all_originate_years(years)
+        dfMonthly = self.get_all_monthly_performance_years(years)
         
+        dfOrigClean, dfMonthlyClean = cleaner.clean_data(dfOrig, dfMonthly)
+        
+        # Set indexes for faster searches
+        dfMonthlyClean.set_index(["id_loan", "svcg_cycle"], inplace=True) #Index on loan index, and timestep. 
+        dfOrigClean.set_index("id_loan", inplace=True) #Index on loan index
+            
+        return dfOrigClean, dfMonthlyClean        
