@@ -1,5 +1,8 @@
 import pandas as pd
 
+# Custom modules
+import DataCleaning as cleaning
+
 class DataCleaner():
     
     def get_ids_to_remove(self, dfOrig, dfMonthly):
@@ -24,14 +27,9 @@ class DataCleaner():
         dfOrigClean = dfOrig[~dfOrig["id_loan"].isin(ids)].copy().reset_index()
         dfMonthlyClean = dfMonthly[~dfMonthly["id_loan"].isin(ids)].copy().reset_index()
         
-        self.clean_flag_mods(dfMonthlyClean)
+        cleaning.clean_columns(dfOrigClean, dfMonthlyClean)
         
         return dfOrigClean, dfMonthlyClean
         
     def _get_ids(self, df, condition):
         return df[condition].id_loan.unique().tolist()
-    
-    def clean_flag_mods(self, dfMonthly):
-        flags = dfMonthly["flag_mod"].to_numpy(dtype=str)
-        flags[flags == "nan"] = "N"
-        dfMonthly["flag_mod"] = flags
