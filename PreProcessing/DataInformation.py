@@ -8,7 +8,8 @@ def get_header_info_type_dict():
         "Header" : str,
         "FullName" : str,
         "dType" : type, 
-        "ColumnPosition" : int
+        "ColumnPosition" : int,
+        "DeletedAfterCleaning" : bool,
     }    
 
 def get_data_dict(filePath):
