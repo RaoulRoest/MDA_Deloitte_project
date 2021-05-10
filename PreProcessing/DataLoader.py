@@ -62,7 +62,7 @@ class DataLoader():
                 df = dfProviderFunction(year)
             
             else:
-                df.append(dfProviderFunction(year))
+                df=df.append(dfProviderFunction(year))
 
             indexer += 1
             

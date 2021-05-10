@@ -36,11 +36,11 @@ def get_data(years):
         
     return dfOrigClean, dfMonthlyClean
 
-def hist_feature(df, feature, bins=100, max_ticks=20):
+def hist_feature(df, feature, bins=100, max_ticks=20,colour="blue"):
     dfGraph = df[feature].copy()
     
     fig, ax = plt.subplots()
-    dfGraph.hist(ax=ax, grid=False, xrot=90, bins=bins)
+    dfGraph.hist(ax=ax, grid=False, xrot=90, bins=bins,color=colour)
     xloc = plt.MaxNLocator(max_ticks)
     ax.xaxis.set_major_locator(xloc)
     
@@ -201,18 +201,18 @@ plotOrigFeatures = {
 }
 
 plotMonthlyFeatures = {
-    "plot" : True,
+    "plot" : False,
     "features" : inputReader.read_monthly_features(),
     "loan" : inputReader.read_loans()
 }
 
 scatterOrigFeatures = {
-    "plot" : True,
+    "plot" : False,
     "features" : inputReader.read_orig_scatter_features()
 }
 
 boxplotOrigFeatures = {
-    "plot" : True, 
+    "plot" : False, 
     "features" : inputReader.read_orig_features(),
 }
 
@@ -223,3 +223,87 @@ Run main function/script
 """
 main(years, plotOrigFeatures, plotMonthlyFeatures, scatterOrigFeatures, boxplotOrigFeatures)
 logger.info("Finished calculations")
+
+"""
+New Part
+"""
+def Complement(list1, list2):
+    lst = []
+    for i in list1:
+        if i not in list2:
+            lst.append(i)
+    return lst
+
+def hist_feature2(df1,df2, feature, bins=100, max_ticks=20,colour="blue",month=False):
+    dfGraph1 = df1[feature].copy()
+    dfGraph2 = df2[feature].copy()
+    
+    fig, ax = plt.subplots()
+    dfGraph1.hist(ax=ax, grid=False, xrot=90, bins=bins,alpha=0.3,color="blue")
+    dfGraph2.hist(ax=ax, grid=False, xrot=90, bins=bins,alpha=0.3,color="red")
+    plt.legend(["No Full PrePayment","Full PrePayment"])
+    xloc = plt.MaxNLocator(max_ticks)
+    ax.xaxis.set_major_locator(xloc)
+    if month==False:
+        gh.set_plot_params(ax, f"Histogram of {feature} of the orig data", feature)
+    else:
+        gh.set_plot_params(ax, f"Histogram of {feature} of the monthly data", feature)
+    return fig
+
+def boxplot_features2(df1,df2, featureList):
+    fig, (ax1,ax2) = plt.subplots(1,2)
+    toPlot, notToPlot = check_dtypes(df1, featureList)
+    
+    if toPlot:
+        df1.boxplot(column=toPlot, ax=ax1)
+        df2.boxplot(column=toPlot, ax=ax2)
+    else:
+        logger.warning("THERE WERE NO FEATURES TO PLOT.", level=1)
+        
+    if notToPlot:
+        featuresNotPlotted = "----".join(notToPlot)
+        logger.warning(f"THE FOLLOWING FEATURES WERE NOT PLOTTED :: {featuresNotPlotted}", level=1)
+    
+    gh.set_plot_params(ax1,
+                       title="Boxplot of several features",
+                       xlabel="feature name")
+    return fig
+
+years = [2013]#[2013,2014,2015,2016,2017,2018,2019,2020]
+dfOrig, dfMonthly = get_data(years)
+from PrepaymentInfoProvider import calculate_monthly_upb_fullprepayment
+dfFPP=calculate_monthly_upb_fullprepayment(dfOrig,dfMonthly)
+FPPdfFPP=dfFPP.loc[dfFPP["FlagFullPrepayment"] == True]
+loanids=dfOrig.index
+#NFPPdfFPP=dfFPP.loc[dfFPP["FlagFullPrepayment"] == True]
+loanidsFPP=FPPdfFPP.index
+loanidsNFPP=Complement(loanids,loanidsFPP)
+FPPnewdfOrig=dfOrig.loc[loanidsFPP]
+NFPPnewdfOrig=dfOrig.loc[loanidsNFPP]
+
+for column in plotOrigFeatures["features"]:
+    fig = hist_feature2(NFPPnewdfOrig,FPPnewdfOrig, column)
+    fig.tight_layout()
+    gh.save_plot(fig, f"{column}_histogram_{years}", "HistogramsOriginateFeatures")
+    plt.close()
+    
+for column in boxplotOrigFeatures["features"]:
+    fig = boxplot_features2(FPPnewdfOrig,FPPnewdfOrig,[column])
+    fig.tight_layout()
+    gh.save_plot(fig, f"Boxplot_of_{column}_{years}", "BoxplotOrigData")
+    plt.close()
+    
+FPPnewdfMonthly=dfMonthly.loc[loanidsFPP]
+FPP2dfMonthly=FPPdfFPP.loc[FPPdfFPP["current_upb"]==0].loc[FPPdfFPP["mths_remng"]!=0]
+
+NFPPnewdfMonthly=dfMonthly.loc[loanidsNFPP]
+# for column in plotMonthlyFeatures["features"]:
+#     fig = hist_feature2(NFPPnewdfMonthly,FPPnewdfMonthly, column,month=True)
+#     fig.tight_layout()
+#     gh.save_plot(fig, f"{column}_histogram_montly_{years}", "HistogramsOriginateFeatures")
+#     plt.close()
+    
+
+
+
+

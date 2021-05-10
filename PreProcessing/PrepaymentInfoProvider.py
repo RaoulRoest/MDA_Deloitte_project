@@ -4,7 +4,7 @@ import sys
 import os
 # Adding path variables for custom modules.
 preProcessing_dir = os.path.join(os.path.abspath(""), "PreProcessing")
-general = os.path.join(os.path.abspath(""), "General")
+general = os.path.join(os.path.dirname(os.path.abspath("")), "General")
 sys.path.append(preProcessing_dir)
 sys.path.append(general)
 
@@ -77,6 +77,16 @@ def calculate_monthly_upb_percentages(upbs, orig_upbs):
     # return calculation of
     # (shifted_current_upb - current_upb) / orig_upb
     return np.divide(upbs_shifted - upbs, orig_upbs, out=np.ones_like(upbs)) 
+    
+def calculate_monthly_upb_fullprepayment(dfOrig,dfMonthly):
+    dfPPM=initialize(dfOrig, dfMonthly)
+    columnName = "FlagFullPrepayment"
+    condition1 = dfPPM["current_upb"] == 0 #If zero, full loan paid
+    condition2 = dfPPM["mths_remng"] != 0 #If zero, contract ended
+    dfPPM[columnName] = False
+    dfPPM.loc[condition1&condition2, columnName] = True
+    return dfPPM
+    
     
 def calculate_prepayment_info(dfOrig, dfMonthly):
     """
