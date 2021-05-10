@@ -1,7 +1,13 @@
-# Import modules
+"""
+====================
+Description
+====================
+
+"""
 # General modules
 import sys 
 import os
+
 # Adding path variables for custom modules.
 preProcessing_dir = os.path.join(os.path.abspath(""), "PreProcessing")
 general = os.path.join(os.path.abspath(""), "General")
