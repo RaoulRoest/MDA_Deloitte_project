@@ -183,18 +183,18 @@ plotOrigFeatures = {
 }
 
 plotMonthlyFeatures = {
-    "plot" : True,
+    "plot" : False,
     "features" : inputReader.read_monthly_features(),
     "loan" : inputReader.read_loans()
 }
 
 scatterOrigFeatures = {
-    "plot" : True,
+    "plot" : False,
     "features" : inputReader.read_orig_scatter_features()
 }
 
 boxplotOrigFeatures = {
-    "plot" : True, 
+    "plot" : False, 
     "features" : inputReader.read_orig_features(),
 }
 
@@ -210,11 +210,7 @@ logger.info("Finished calculations")
 New Part
 """
 def Complement(list1, list2):
-    lst = []
-    for i in list1:
-        if i not in list2:
-            lst.append(i)
-    return lst
+    return [i for i in list1 if i not in list2]
 
 def hist_feature2(df1,df2, feature, bins=100, max_ticks=20,colour="blue",month=False):
     dfGraph1 = df1[feature].copy()
@@ -253,117 +249,107 @@ def boxplot_features2(df1,df2, featureList):
 
 from PrepaymentInfoProvider import calculate_prepayment_info
 
-def Plot_Full_PrePayment():
-    years = [2013]#[2013,2014,2015,2016,2017,2018,2019,2020]
-    loader = DataLoader()
-    dfOrig, dfMonthly = loader.get_data_set(years)
-    
-    dfPP=calculate_prepayment_info(dfOrig,dfMonthly)
-    
-    
-    PPdfPP=dfPP.loc[dfPP["prepayment_type"] == "FullPrepayment"]
-    loanids=dfOrig.index
-    #NFPPdfFPP=dfFPP.loc[dfFPP["FlagFullPrepayment"] == True]
-    loanidsPP=PPdfPP.index
-    loanidsNPP=Complement(loanids,loanidsPP)
-    PPnewdfOrig=dfOrig.loc[loanidsPP]
-    NPPnewdfOrig=dfOrig.loc[loanidsNPP]
-    
-    for column in plotOrigFeatures["features"]:
-        fig = hist_feature2(NPPnewdfOrig,PPnewdfOrig, column)
-        fig.tight_layout()
-        plt.show()
-        #gh.save_plot(fig, f"{column}_histogram_{years}", "HistogramsOriginateFeatures")
-        #plt.close()
-    
-    for column in boxplotOrigFeatures["features"]:
-        fig = boxplot_features2(NPPnewdfOrig,PPnewdfOrig,[column])
-        fig.tight_layout()
-        plt.show()
-        #gh.save_plot(fig, f"Boxplot_of_{column}_{years}", "BoxplotOrigData")
-        #plt.close()
-        
-    
-def Plot_Partial_PrePayment():    
-    years = [2013]#[2013,2014,2015,2016,2017,2018,2019,2020]
-    loader = DataLoader()
-    dfOrig, dfMonthly = loader.get_data_set(years)
-    
-    dfPP=calculate_prepayment_info(dfOrig,dfMonthly)
-    
-    
-    PPdfPP=dfPP.loc[dfPP["prepayment_type"] == "PartialPrepayment"]
-    loanids=dfOrig.index
-    #NFPPdfFPP=dfFPP.loc[dfFPP["FlagFullPrepayment"] == True]
-    loanidsPP=PPdfPP.index
-    loanidsNPP=Complement(loanids,loanidsPP)
-    PPnewdfOrig=dfOrig.loc[loanidsPP]
-    NPPnewdfOrig=dfOrig.loc[loanidsNPP]
-    
-    for column in plotOrigFeatures["features"]:
-        fig = hist_feature2(NPPnewdfOrig,PPnewdfOrig, column)
-        fig.tight_layout()
-        plt.show()
-        #gh.save_plot(fig, f"{column}_histogram_{years}", "HistogramsOriginateFeatures")
-        #plt.close()
-        
-        
-    for column in boxplotOrigFeatures["features"]:
-        fig = boxplot_features2(NPPnewdfOrig,PPnewdfOrig,[column])
-        fig.tight_layout()
-        plt.show()
-        #gh.save_plot(fig, f"Boxplot_of_{column}_{years}", "BoxplotOrigData")
-        #plt.close()
-    
-    
-def Plot_Partial_and_Full_PrePayment():  
-    years = [2013]#[2013,2014,2015,2016,2017,2018,2019,2020]
-    loader = DataLoader()
-    dfOrig, dfMonthly = loader.get_data_set(years)
-    
-    dfPP=calculate_prepayment_info(dfOrig,dfMonthly)
-    
-    
-    PPdfPP=dfPP.loc[dfPP["prepayment_type"] == "FullPrepayment"]
-    extra=dfPP.loc[dfPP["prepayment_type"] == "PartialPrepayment"]
-    PPdfPP=PPdfPP.append(extra)
-    loanids=dfOrig.index
-    #NFPPdfFPP=dfFPP.loc[dfFPP["FlagFullPrepayment"] == True]
-    loanidsPP=PPdfPP.index
-    loanidsNPP=Complement(loanids,loanidsPP)
-    PPnewdfOrig=dfOrig.loc[loanidsPP]
-    NPPnewdfOrig=dfOrig.loc[loanidsNPP]
-    
-    for column in plotOrigFeatures["features"]:
-        fig = hist_feature2(NPPnewdfOrig,PPnewdfOrig, column)
-        fig.tight_layout()
-        plt.show()
-        #gh.save_plot(fig, f"{column}_histogram_{years}", "HistogramsOriginateFeatures")
-        #plt.close()
-        
-    for column in boxplotOrigFeatures["features"]:
-        fig = boxplot_features2(NPPnewdfOrig,PPnewdfOrig,[column])
-        fig.tight_layout()
-        plt.show()
-        #gh.save_plot(fig, f"Boxplot_of_{column}_{years}", "BoxplotOrigData")
-        #plt.close()
-        
-def Get_months_PrePayment(df):
-    """Df as returned by prepayment_info(dfOrig,dfMonthly)"""
-    NoPP=df.loc[df["prepayment_type"] == "No Prepayment"]
-    FullPP=df.loc[df["prepayment_type"] == "FullPrepayment"]
-    PartialPP=df.loc[df["prepayment_type"] == "PartialPrepayment"]
-    MonthNoPP=NoPP["orig_loan_term"]-NoPP["mths_remng"]
-    MonthFullPP=FullPP["orig_loan_term"]-FullPP["mths_remng"]
-    MonthPartialPP=PartialPP["orig_loan_term"]-PartialPP["mths_remng"]
-    return MonthNoPP,MonthFullPP,MonthPartialPP
+years = [2013,2014,2015,2016,2017,2018,2019,2020]
+loader = DataLoader()
+dfOrig, dfMonthly = loader.get_data_set(years)
+dfPP=calculate_prepayment_info(dfOrig,dfMonthly)
 
-def Split_data_PrePayment(df):
+def plot_full_prepayment(dfPP):  
+    dfFullPrepayment=dfPP.loc[dfPP["prepayment_type"] == "FullPrepayment"]
+    loanids=dfOrig.index
+    #NFPPdfFPP=dfFPP.loc[dfFPP["FlagFullPrepayment"] == True]
+    loanidsFullPrepayment=dfFullPrepayment.index
+    loanidsNoFullPrepayment=Complement(loanids,loanidsFullPrepayment)
+    loanidsFullPrepayment=list(set(loanidsFullPrepayment))
+    loanidsNoFullPrepayment=list(set(loanidsNoFullPrepayment))
+    dfOrigFullPrepayment=dfOrig.loc[loanidsFullPrepayment]
+    dfOrigFullNoPrepayment=dfOrig.loc[loanidsNoFullPrepayment]
+    
+    for column in plotOrigFeatures["features"]:
+        fig = hist_feature2(dfOrigFullNoPrepayment,dfOrigFullPrepayment, column)
+        fig.tight_layout()
+        plt.show()
+        gh.save_plot(fig, f"{column}_histogram_{years}", "FullPrePayment/Histograms")
+        plt.close()
+    
+    for column in boxplotOrigFeatures["features"]:
+        fig = boxplot_features2(dfOrigFullNoPrepayment,dfOrigFullPrepayment,[column])
+        fig.tight_layout()
+        plt.show()
+        gh.save_plot(fig, f"Boxplot_of_{column}_{years}", "FullPrePayment/Boxplots")
+        plt.close()
+        
+ 
+def plot_partial_prepayment(dfPP): 
+    dfPartialPrepayment=dfPP.loc[dfPP["prepayment_type"] == "PartialPrepayment"]
+    loanids=dfOrig.index
+    #NFPPdfFPP=dfFPP.loc[dfFPP["FlagFullPrepayment"] == True]
+    loanidsPartialPrepayment=dfPartialPrepayment.index
+    loanidsNoPartialPrepayment=Complement(loanids,loanidsPartialPrepayment)
+    loanidsPartialPrepayment=list(set(loanidsPartialPrepayment))
+    loanidsNoPartialPrepayment=list(set(loanidsNoPartialPrepayment))
+    dfOrigPartialPrepayment=dfOrig.loc[loanidsPartialPrepayment]
+    dfOrigNoPartialPrepayment=dfOrig.loc[loanidsNoPartialPrepayment]
+    
+    for column in plotOrigFeatures["features"]:
+        fig = hist_feature2( dfOrigNoPartialPrepayment,dfOrigPartialPrepayment, column)
+        fig.tight_layout()
+        plt.show()
+        gh.save_plot(fig, f"{column}_histogram_{years}", "PartialPrePayment/Histograms")
+        plt.close()
+        
+        
+    for column in boxplotOrigFeatures["features"]:
+        fig = boxplot_features2( dfOrigNoPartialPrepayment,dfOrigPartialPrepayment,[column])
+        fig.tight_layout()
+        plt.show()
+        gh.save_plot(fig, f"Boxplot_of_{column}_{years}", "PartialPrePayment/Boxplots")
+        plt.close()
+    
+    
+def plot_partial_and_full_prepayment(dfPP):  
+    dfFullPrepayment=dfPP.loc[dfPP["prepayment_type"] == "FullPrepayment"]
+    dfPartialPrepayment=dfPP.loc[dfPP["prepayment_type"] == "PartialPrepayment"]
+    dfPartialFullPrepayment=dfFullPrepayment.append(dfPartialPrepayment)
+    loanids=dfOrig.index
+    #NFPPdfFPP=dfFPP.loc[dfFPP["FlagFullPrepayment"] == True]
+    loanidsPartialFullPrepayment=dfPartialFullPrepayment.index
+    loanidsNoPartialFullPrepayment=Complement(loanids,loanidsPartialFullPrepayment)
+    loanidsPartialFullPrepayment=list(set(loanidsPartialFullPrepayment))
+    loanidsNoPartialFullPrepayment=list(set(loanidsNoPartialFullPrepayment))
+    dfOrigPartialFullPrepayment=dfOrig.loc[loanidsPartialFullPrepayment]
+    dfOrigNoPartialFullPrepayment=dfOrig.loc[loanidsNoPartialFullPrepayment]
+    
+    for column in plotOrigFeatures["features"]:
+        fig = hist_feature2(dfOrigNoPartialFullPrepayment,dfOrigPartialFullPrepayment, column)
+        fig.tight_layout()
+        plt.show()
+        gh.save_plot(fig, f"{column}_histogram_{years}", "CombinedPrePayment/Histograms")
+        plt.close()
+        
+    for column in boxplotOrigFeatures["features"]:
+        fig = boxplot_features2(dfOrigNoPartialFullPrepayment,dfOrigPartialFullPrepayment,[column])
+        fig.tight_layout()
+        plt.show()
+        gh.save_plot(fig, f"Boxplot_of_{column}_{years}", "CombinedPrePayment/Boxplots")
+        plt.close()
+        
+def get_months_prepayment(df):
+    """Df as returned by prepayment_info(dfOrig,dfMonthly)"""
+    dfNoPrepayment=df.loc[df["prepayment_type"] == "No Prepayment"]
+    dfFullPrepayment=df.loc[df["prepayment_type"] == "FullPrepayment"]
+    dfPartialPrepayment=df.loc[df["prepayment_type"] == "PartialPrepayment"]
+    dfMonthNoPrepayment=dfNoPrepayment["orig_loan_term"]-dfNoPrepayment["mths_remng"]
+    dfMonthFullPrepayment=dfFullPrepayment["orig_loan_term"]-dfFullPrepayment["mths_remng"]
+    dfMonthPartialPrepayment=dfPartialPrepayment["orig_loan_term"]-dfPartialPrepayment["mths_remng"]
+    return dfMonthNoPrepayment,dfMonthFullPrepayment,dfMonthPartialPrepayment
+
+def split_data_prepayment(df):
     """df as returned by prepayment_info(dfOrig,dfMonthly)"""
-    NoPP=df.loc[df["prepayment_type"] == "No Prepayment"]
-    FullPP=df.loc[df["prepayment_type"] == "FullPrepayment"]
-    PartialPP=df.loc[df["prepayment_type"] == "PartialPrepayment"]
-    return NoPP,FullPP,PartialPP
+    dfNoPrepayment=df.loc[df["prepayment_type"] == "No Prepayment"]
+    dfFullPrepayment=df.loc[df["prepayment_type"] == "FullPrepayment"]
+    dfPartialPrepayment=df.loc[df["prepayment_type"] == "PartialPrepayment"]
+    return dfNoPrepayment,dfFullPrepayment,dfPartialPrepayment
 
 def boxplot_features4(df1,df2,df3,df4, featureList):
     fig, (ax1,ax2,ax3,ax4) = plt.subplots(1,4)
@@ -386,38 +372,27 @@ def boxplot_features4(df1,df2,df3,df4, featureList):
                        xlabel="feature name")
     return fig
 
-def Plot_PrePayment_comparison(df):
+def plot_prepayment_comparison(df):
     df["timescale"]=df["mths_remng"]/df["orig_loan_term"]
     df["payscale"]=df["current_upb"]/df["orig_upb"]
-    NoPP,FullPP,PartialPP=Split_data_PrePayment(df)
+    dfNoPrepayment,dfFullPrepayment,dfPartialPrepayment=split_data_prepayment(df)
     # for column in plotMonthlyFeatures["features"]:
     #     fig = boxplot_features4(NPPnewdfOrig,PPnewdfOrig,[column])
     #     fig.tight_layout()
     #     plt.show()
-    fig=boxplot_features4(NoPP,FullPP,PartialPP,df,["timescale","payscale"])
+    fig=boxplot_features4(dfNoPrepayment,dfFullPrepayment,dfPartialPrepayment,df,["timescale","payscale"])
     fig.tight_layout()
     plt.show()
-    return NoPP
+    gh.save_plot(fig,"PrePayment Monthly File", "MonthlyFile/PrePayment")
+    plt.close()
+    
+plot_full_prepayment(dfPP)
+plot_partial_prepayment(dfPP)
+plot_partial_and_full_prepayment(dfPP)
+plot_prepayment_comparison(dfPP)
 
-def Yearmonths(yyyymm,m):
-    yyyy=yyyymm[:4]
-    mm=yyyymm[4:]
-    y=int(m/12)
-    months=m%12
-    newyear=int(yyyy)-y
-    if int(months)<int(mm):
-        newmonths=int(mm)-months
-    else:
-        newyear-=1
-        newmonths=int(mm)+12-months
-    date=str(newyear)+str(newmonths).zfill(2)
-    return date
 
-def MultipleYearMonths(yyyymm,m):
-    dates=np.zeros(len(yyyymm))
-    for i in range(len(yyyymm)):
-        dates[i]=Yearmonths(yyyymm[i],m[i])
-    return dates
+
         
         
         
