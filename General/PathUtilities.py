@@ -9,3 +9,7 @@ def check_extension(filePath, ext):
         return filePath
     else:
         return f"{filePath}.{ext}"
+    
+def get_data_dir():
+    curDir = os.path.dirname(__file__) 
+    return os.path.join(curDir, "..", "Data")

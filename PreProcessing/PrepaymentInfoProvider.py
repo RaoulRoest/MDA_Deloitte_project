@@ -142,11 +142,12 @@ here one can check if the functions
 work. 
 """
 
-logger.info("Retrieve data")
-loader = DataLoader()
-dfOrig, dfMonthly = loader.get_data_set([2013])
-
-logger.info("Calculate Prepayment")
-dfPPM = calculate_prepayment_info(dfOrig, dfMonthly)
-
-print(dfPPM[dfPPM[ColumnNames.FlagName] == True])
+if __name__ == "__main__":
+    logger.info("Retrieve data")
+    loader = DataLoader()
+    dfOrig, dfMonthly = loader.get_data_set([2013])
+    
+    logger.info("Calculate Prepayment")
+    dfPPM = calculate_prepayment_info(dfOrig, dfMonthly)
+    
+    print(dfPPM[dfPPM[ColumnNames.FlagName] == True])

@@ -140,6 +140,7 @@ JupyterNotebooks/
 
 # Data files
 Data/*.txt
+Data/**/*.csv
 
 # Working with excel
 ~$*.xlsx
