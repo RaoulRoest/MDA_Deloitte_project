@@ -14,15 +14,12 @@ general = os.path.join(os.path.abspath(""), "General")
 sys.path.append(preProcessing_dir)
 sys.path.append(general)
 
-# Calculation modules.
-import pandas as pd 
-import numpy as np 
-
 # Custom modules
 from DataLoader import DataLoader
 
 # Helper modules
 import ConsoleWriter as logger
+import CsvWriter as csv
 import Helpers
 
 """
@@ -82,7 +79,7 @@ def initialize(dfOrig, dfMonthly):
     dfInit = dfOrig[get_orig_columns()].merge(dfMonthly[get_monthly_columns()], 
                                                           how="inner", 
                                                           on="id_loan")
-    return dfInit
+    return dfInit.reset_index()
 
 def calculate_shifted_ubps(upb):
     return Helpers.shift_numpy_array(upb, 1, fill_value=0)
@@ -119,8 +116,12 @@ def set_prepayment_flag(dfPPM, shiftedUpb):
     condition_6 = (dfPPM[ColumnNames.ShiftedPaymentsName] > 0) |\
         (dfPPM[ColumnNames.PaymentName] > 2 * dfPPM[ColumnNames.ScheduledPaymentsName])
     
+    # Only on same loan_id's
+    shiftedLoans = Helpers.shift_numpy_array(dfPPM["id_loan"].to_numpy(), 1, "Empty")
+    condition_7 = dfPPM["id_loan"] == shiftedLoans
+    
     dfPPM[ColumnNames.FlagName] = condition_1 & condition_2 & condition_3 & condition_4 & condition_5 &\
-        condition_6
+        condition_6 & condition_7
 
 def classify_prepayments(dfPPM):
     condition_ppm = dfPPM[ColumnNames.FlagName] == True
@@ -150,4 +151,4 @@ if __name__ == "__main__":
     logger.info("Calculate Prepayment")
     dfPPM = calculate_prepayment_info(dfOrig, dfMonthly)
     
-    print(dfPPM[dfPPM[ColumnNames.FlagName] == True])
+    csv.write_to_csv(dfPPM, "TestFile", "Tests")
