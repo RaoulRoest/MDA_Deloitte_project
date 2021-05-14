@@ -67,7 +67,9 @@ def get_loan_info(loans):
     
 def scatter_features(df, feature1, feature2):
     fig, ax = plt.subplots()
+
     df.plot.scatter(feature1, feature2, ax=ax)
+    
     
     gh.set_plot_params(ax, 
                        title=f"Scatter plot of {feature1} against {feature2}",
@@ -176,7 +178,7 @@ see --> InputReader.py
 for more info.
 =============================
 """
-years = [2013]
+years = range(2013, 2021)
 plotOrigFeatures = {
     "plot" : False, 
     "features" : inputReader.read_orig_features(),
