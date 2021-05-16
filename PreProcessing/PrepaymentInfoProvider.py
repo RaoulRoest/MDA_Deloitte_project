@@ -14,6 +14,9 @@ general = os.path.join(os.path.abspath(""), "General")
 sys.path.append(preProcessing_dir)
 sys.path.append(general)
 
+import pandas as pd
+import numpy as np
+
 # Custom modules
 from DataLoader import DataLoader
 
@@ -31,6 +34,8 @@ class ColumnNames():
      FlagName = "prepayment_flag"
      PrepaymentTypeName = "prepayment_type"
      ScheduledPaymentsName = "scheduled_payments"
+     ScheduledUpbPart = "sch_upb_part"
+     ScheduledInterestPart = "sch_int_part"
      AdjustedScheduledPaymentScheme = "adj_sched_paym"
      PreviousPaymentFlag = "previous_payment_flag"
 
@@ -77,22 +82,44 @@ def initialize(dfOrig, dfMonthly):
         - current_upb,
         - mths_remng,
         - flag_mod,
-        - delq_sts
+        - delq_sts,
 
     """
     # Calculate scheduled payments (over orig as this data contains all it needs)
     dfOrig[ColumnNames.ScheduledPaymentsName] = dfOrig.apply(lambda row: calculate_monthly_payments_df(row), axis=1)
-    dfInit = dfOrig[get_orig_columns()].merge(dfMonthly[get_monthly_columns()], 
+    dfInit = dfMonthly[get_monthly_columns()].reset_index().merge(dfOrig[get_orig_columns()], 
                                                           how="inner", 
                                                           on="id_loan")
-    return dfInit.reset_index()
+    dfInit.set_index(["id_loan", "svcg_cycle"], inplace=True)
+    calc_upb_part(dfOrig=dfOrig, dfPPM=dfInit)
+    return dfInit
 
 def calculate_shifted_ubps(upb):
     return Helpers.shift_numpy_array(upb, 1, fill_value=0)
 
+def buid_scheduled_payments(id_loan, dfPPM, dfOrig, interest):
+    payments = dfPPM.loc[id_loan][ColumnNames.ScheduledPaymentsName]
+    n = dfOrig.loc[id_loan]["orig_loan_term"]
+    n_values = payments.count()
+    
+    # Build scheduled payments
+    # Calculate compounded discount factor
+    compounded = np.flip(np.cumsum([(1 / interest) ** (-i) for i in range(1, n+1)]))[0:n_values]
+    
+    # Calculate openDebt
+    debt_schedule = compounded * payments
+    dfPPM.loc[id_loan, ColumnNames.ScheduledUpbPart] = -debt_schedule.diff(1).values
+
+def calc_upb_part(dfOrig, dfPPM):
+    dfOrig[ColumnNames.ScheduledUpbPart] = 0
+    for index in dfOrig.index.to_list():
+        print(index, end="", flush=True)
+        interest = (1 + dfOrig.loc[index]['int_rt'] / 100)**(1/12)
+        buid_scheduled_payments(index, dfPPM, dfOrig, interest)
+
 def calculate_monthly_factor(interest, loan_term):
-    factor = 1 - interest**(loan_term + 1)
-    factor = factor / (1 -interest)
+    factor = 1 - (1 / interest)**(loan_term + 1)
+    factor = factor / (1 - 1 / interest)
     return factor - 1
 
 def calculate_monthly_payments(monthly_factor, loan):
@@ -136,7 +163,7 @@ def calculate_prepayment_info(dfOrig, dfMonthly, threshold_percentage=0.1):
 def set_prepayment_flag(dfPPM, shiftedUpb):
     condition_1 = shiftedUpb > 0
     condition_2 = dfPPM[ColumnNames.PaymentName] > 0
-    condition_3 = (dfPPM[ColumnNames.PaymentName].to_numpy() - dfPPM[ColumnNames.AdjustedScheduledPaymentScheme].to_numpy()) > 0
+    condition_3 = (dfPPM[ColumnNames.PaymentName].to_numpy() - dfPPM[ColumnNames.ScheduledUpbPart].to_numpy()) > 0
     condition_4 = dfPPM["mths_remng"] > 0
     condition_5 = dfPPM["delq_sts"] == "0"
     condition_6 = (dfPPM[ColumnNames.ShiftedPaymentsName] > 0) |\
