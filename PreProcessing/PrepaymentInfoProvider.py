@@ -170,6 +170,7 @@ def set_prepayment_flag(dfPPM, shiftedUpb):
         (dfPPM[ColumnNames.PaymentName] > 2 * dfPPM[ColumnNames.ScheduledPaymentsName])
     
     # Only on same loan_id's
+    dfPPM.reset_index(inplace=True)
     shiftedLoans = Helpers.shift_numpy_array(dfPPM["id_loan"].to_numpy(), 1, "Empty")
     condition_7 = dfPPM["id_loan"] == shiftedLoans
     
