@@ -97,25 +97,24 @@ def initialize(dfOrig, dfMonthly):
 def calculate_shifted_ubps(upb):
     return Helpers.shift_numpy_array(upb, 1, fill_value=0)
 
-def buid_scheduled_payments(id_loan, dfPPM, dfOrig, interest):
-    payments = dfPPM.loc[id_loan][ColumnNames.ScheduledPaymentsName]
-    n = dfOrig.loc[id_loan]["orig_loan_term"]
+def buid_scheduled_payments(dfPPM):
+    interest = dfPPM["int_rt"].values[0]
+    interest = (1 + interest / 100) ** (1/12)
+    payments = dfPPM[ColumnNames.ScheduledPaymentsName]
+    n = dfPPM["orig_loan_term"].values[0]
     n_values = payments.count()
-    
+
     # Build scheduled payments
     # Calculate compounded discount factor
-    compounded = np.flip(np.cumsum([(1 / interest) ** (-i) for i in range(1, n+1)]))[0:n_values]
+    discount = np.cumsum([(1 / interest) ** (-i) for i in range(1, n+1)])
+    compounded = np.flip(discount)[0:n_values]
     
     # Calculate openDebt
     debt_schedule = compounded * payments
-    dfPPM.loc[id_loan, ColumnNames.ScheduledUpbPart] = -debt_schedule.diff(1).values
+    return pd.DataFrame(-debt_schedule.diff(1))
 
 def calc_upb_part(dfOrig, dfPPM):
-    dfOrig[ColumnNames.ScheduledUpbPart] = 0
-    for index in dfOrig.index.to_list():
-        print(index, end="", flush=True)
-        interest = (1 + dfOrig.loc[index]['int_rt'] / 100)**(1/12)
-        buid_scheduled_payments(index, dfPPM, dfOrig, interest)
+    dfPPM[ColumnNames.ScheduledUpbPart] = dfPPM.groupby("id_loan").apply(lambda df: buid_scheduled_payments(df))
 
 def calculate_monthly_factor(interest, loan_term):
     factor = 1 - (1 / interest)**(loan_term + 1)
@@ -161,6 +160,7 @@ def calculate_prepayment_info(dfOrig, dfMonthly, threshold_percentage=0.1):
     return dfPPM
 
 def set_prepayment_flag(dfPPM, shiftedUpb):
+    dfPPM.reset_index(inplace=True)
     condition_1 = shiftedUpb > 0
     condition_2 = dfPPM[ColumnNames.PaymentName] > 0
     condition_3 = (dfPPM[ColumnNames.PaymentName].to_numpy() - dfPPM[ColumnNames.ScheduledUpbPart].to_numpy()) > 0
@@ -170,7 +170,6 @@ def set_prepayment_flag(dfPPM, shiftedUpb):
         (dfPPM[ColumnNames.PaymentName] > 2 * dfPPM[ColumnNames.ScheduledPaymentsName])
     
     # Only on same loan_id's
-    dfPPM.reset_index(inplace=True)
     shiftedLoans = Helpers.shift_numpy_array(dfPPM["id_loan"].to_numpy(), 1, "Empty")
     condition_7 = dfPPM["id_loan"] == shiftedLoans
     
