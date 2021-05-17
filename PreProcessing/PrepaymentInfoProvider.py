@@ -97,24 +97,10 @@ def initialize(dfOrig, dfMonthly):
 def calculate_shifted_ubps(upb):
     return Helpers.shift_numpy_array(upb, 1, fill_value=0)
 
-def buid_scheduled_payments(dfPPM):
-    interest = dfPPM["int_rt"].values[0]
-    interest = (1 + interest / 100) ** (1/12)
-    payments = dfPPM[ColumnNames.ScheduledPaymentsName]
-    n = dfPPM["orig_loan_term"].values[0]
-    n_values = payments.count()
-
-    # Build scheduled payments
-    # Calculate compounded discount factor
-    discount = np.cumsum([(1 / interest) ** (-i) for i in range(1, n+1)])
-    compounded = np.flip(discount)[0:n_values]
-    
-    # Calculate openDebt
-    debt_schedule = compounded * payments
-    return pd.DataFrame(-debt_schedule.diff(1))
-
 def calc_upb_part(dfOrig, dfPPM):
-    dfPPM[ColumnNames.ScheduledUpbPart] = dfPPM.groupby("id_loan").apply(lambda df: buid_scheduled_payments(df))
+    interest = (1 / (1 + dfPPM["int_rt"])) ** (1/12)
+    interest = interest ** (dfPPM["orig_loan_term"] - dfPPM["mths_remng"] + 1) 
+    dfPPM[ColumnNames.ScheduledUpbPart] = dfPPM[ColumnNames.ScheduledPaymentsName] * interest
 
 def calculate_monthly_factor(interest, loan_term):
     factor = 1 - (1 / interest)**(loan_term + 1)
