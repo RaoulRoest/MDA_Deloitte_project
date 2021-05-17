@@ -59,7 +59,7 @@ def write_numpy_to_csv(arr, filename, train=True, sep=','):
     filePath = os.path.join(folderPath, filename)
     pu.check_extension(filePath=filePath, ext="csv")
     
-    np.savetxt(filePath, arr, delimiter=sep, fmt='%10f')
+    np.savetxt(filePath, arr, delimiter=sep, fmt='%s')
 
 def divide_data_set(arr, ratio_train):
     """
@@ -174,12 +174,15 @@ def main(years, ratio, sep):
     logger.info(f"Divide data sets by ratio {ratio}", level=0)
     # Divide data set
     origData = dfOrig.reset_index().to_numpy()
+    columns = np.array(dfOrig.columns.to_list())
     origTrain, origTest = divide_data_set(origData, ratio_train=ratio)
     # dfMonthlyTrain, dfMonthlyTest = divide_data_set(dfMonthly, ratio_train=ratio)
     
     logger.info(f"Write data sets to csv", level=0)
     # Write to csv
     years_addition = get_years_addition(years=years)
+    write_numpy_to_csv(columns, f"columnNames_{years_addition}.csv", train=True, sep=sep)
+    write_numpy_to_csv(columns, f"columnNames_{years_addition}.csv", train=False, sep=sep)
     write_numpy_to_csv(origTrain, f"OriginateData_{years_addition}.csv", train=True, sep=sep)
     write_numpy_to_csv(origTest, f"OriginateData_{years_addition}.csv", train=False, sep=sep)
 
