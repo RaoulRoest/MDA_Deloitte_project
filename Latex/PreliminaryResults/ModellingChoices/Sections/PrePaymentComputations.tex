@@ -21,32 +21,67 @@
     $B$ can be determined: 
     \begin{equation}
         B\left[
-            \displaystyle\sum_{j=1}^{n} (1 + r)^{-t_j}  
+            \displaystyle\sum_{j=1}^{n} \left(
+                (1 + r)^{-1}
+                \right)^{t_j}  
         \right] = 
         B\left[
-            \displaystyle\sum_{j=0}^{n} (1 + r)^{-t_j} - 1  
+            \displaystyle\sum_{j=0}^{n} \left(
+                (1 + r)^{-1}
+                \right)^{t_j} - 1  
         \right] = 
         B \left[
-            \dfrac{1 - (1 + r)^{n+1}}{1 - (1 + r)} - 1
-        \right] =
-        B \left[
-            \dfrac{1 - (1 + r)^{n+1}}{r}  - 1
+            \dfrac{
+                1 - \left(
+                    \dfrac{1}{1 + r}
+                \right)^{n+1}
+                }
+                {
+                    1 - \dfrac{1}{(1 + r)}
+                } - 1
         \right].
     \end{equation}
     From this the monthly payments $B$ can be determined: 
     \begin{equation}
         B = \dfrac{L}{
-            \left(
-                \dfrac{1 - (1 + r)^{n+1}}{r} - 1
-            \right)
-        }
+                \left[
+                    \dfrac{
+                        1 - \left(
+                            \dfrac{1}{1 + r}
+                        \right)^{n+1}
+                        }
+                        {
+                            1 - \dfrac{1}{(1 + r)}
+                        } - 1
+                \right]        
+            }
     \end{equation}
     The term 
     \begin{equation}
-        \dfrac{1 - (1 + r)^{n+1}}{r} - 1        
+        \dfrac{
+            1 - \left(
+                \dfrac{1}{1 + r}
+            \right)^{n+1}
+            }
+            {
+                1 - \dfrac{1}{(1 + r)}
+            } - 1
     \end{equation}
     will we call the monthly factor. Note that the interest rate given is a yearly rate. The 
     corresponding monthly rate can be calculated by: 
     \begin{equation}
         (1 + r)^{\frac{1}{12}}.
     \end{equation} 
+
+    Now to get the outstanding debt at time $t_j$, 
+    \begin{equation}
+        U_{t_j} = B \left(
+            (1+r)^1 + (1 + r)^2 + \ldots + (1 + r)^{t_n - t_j}
+            \right)
+    \end{equation}
+    where $t_n$ is the last payment date. This yields a payment of the 
+    upb at time $t_j$ of
+    \begin{equation}
+        U_{t_{j-1}} - U_{t_{j}} = 
+        B (1 + r)^{t_n - t_j + 1}  
+    \end{equation}
