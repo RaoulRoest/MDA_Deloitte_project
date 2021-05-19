@@ -38,7 +38,7 @@ def build_data_set(years, recalculate=False):
 
     if(recalculate):
         logger.info("Recalculating adjusted data files")
-        dfOrig = recalculate_data_set(years)
+        dfOrig = recalculate_data_set(years).reset_index()
         csv.write_to_csv(dfOrig, filename=filename, specific=EnvironmentVariables.FolderName, sep=',')                
     
     else:
@@ -47,7 +47,7 @@ def build_data_set(years, recalculate=False):
             dfOrig = get_data_from_file(years=years)
         else:
             logger.warning(f"File {filename} was nog found, recalculating adjusted data files.")
-            dfOrig = recalculate_data_set(years)
+            dfOrig = recalculate_data_set(years).reset_index()
             csv.write_to_csv(dfOrig, filename=filename, specific=EnvironmentVariables.FolderName, sep=',')                
     
     return dfOrig
