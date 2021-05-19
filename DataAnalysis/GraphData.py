@@ -15,6 +15,7 @@ from DataLoader import DataLoader
 import GraphHelper as gh
 import ConsoleWriter as logger
 import InputGraphData.InputReader as inputReader
+import DependenceTests as DT
 
 def hist_feature(df, feature, bins=100, max_ticks=20):
     dfGraph = df[feature].copy()
@@ -432,6 +433,7 @@ plot_full_against_no_full_prepayment()
 plot_partial_against_no_prepayment()
 plot_partial_and_full_against_no_prepayment()
 plot_partial_or_full_against_no_prepayment()
+
 
         
         
