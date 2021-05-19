@@ -9,9 +9,7 @@ import sys
 import os
 
 # Adding path variables for custom modules.
-preProcessing_dir = os.path.join(os.path.abspath(""), "PreProcessing")
-general = os.path.join(os.path.abspath(""), "General")
-sys.path.append(preProcessing_dir)
+general = os.path.join(os.path.dirname(__file__), "..", "General")
 sys.path.append(general)
 
 import pandas as pd
