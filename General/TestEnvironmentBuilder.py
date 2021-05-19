@@ -1,5 +1,6 @@
 import os
 import sys
+from pandas.io import excel
 curDir = os.path.dirname(__file__)
 sys.path.append(os.path.join(curDir, "..", "PreProcessing"))
 
@@ -61,27 +62,6 @@ def write_numpy_to_csv(arr, filename, train=True, sep=','):
     
     np.savetxt(filePath, arr, delimiter=sep, fmt='%s')
 
-def divide_data_set(arr, ratio_train):
-    """
-    Ratio based on the train set. 
-    Hence: 0.7 => 70% train and 30% test
-    
-    NOT RANDOM;
-    Just first n rows for train and 
-    rest for test.
-    """
-    if((ratio_train > 1) | (ratio_train < 0)):
-        raise Exception("ratio_train should be between 0 and 1")
-    
-    # n = len(df.index)
-    # trainAmount = int(n * ratio_train)
-    # testAmount = n - trainAmount
-    
-    # dfTrain = df[:trainAmount]
-    # dfTest = df[trainAmount:testAmount+1]
-    
-    return train_test_split(arr, test_size=ratio_train)
-
 def get_years_addition(years):
     if(len(years) > 1):
         return f"{years[0]}-{years[-1]}"
@@ -91,8 +71,8 @@ def get_years_addition(years):
 def prepare_orig_data(dfOrig):
     """
     We make the orig data numeric. This includes: 
-        - removing the msa (as it is not compatible)
-        - Change the flags to True/False values
+        - removing the msa, zipcode, dt_matr and dt_first_pi (as it is not compatible)
+        - Change the flags to True/False values {0,1}
         - get dummies for large categoric values
     """
     # map to bool : ppmt_pnlty, flag_sc,
@@ -101,16 +81,19 @@ def prepare_orig_data(dfOrig):
     exclude = [
         "zipcode",
         "dt_first_pi",
-        "dt_matr,"
+        "dt_matr",
+        "cd_msa",
+        "index",
     ]
-    yesNoMap = {"N" : False, "Y" : True}
+    yesNoMap = {"N" : 0, "Y" : 1}
     
     # Map
     dfOrig["flag_sc"] = dfOrig["flag_sc"].map(yesNoMap)
     dfOrig["ppmt_pnlty"] = dfOrig["ppmt_pnlty"].map(yesNoMap)
     
     # del msa
-    dfOrig.drop("cd_msa", axis=1)
+    for column in exclude:
+        dfOrig.drop(column, axis=1, inplace=True)
     
     # Get categorical
     numeric, nonNumerics = Helpers.check_dtypes(dfOrig, dfOrig.columns)
@@ -159,7 +142,7 @@ def prepare_ppm(dfPPM):
     
     return dfPPM.groupby("id_loan").max()
 
-def main(years, ratio, sep):
+def main(years, ratio, sep, seed):
     logger.info("Read data", level=0)
     loader = DataLoader()
     logger.info("Read Originate and Monthly data", level=1)
@@ -173,10 +156,10 @@ def main(years, ratio, sep):
     
     logger.info(f"Divide data sets by ratio {ratio}", level=0)
     # Divide data set
-    origData = dfOrig.reset_index().to_numpy()
+    dfOrig.reset_index(inplace=True)
+    origData = dfOrig.to_numpy()
     columns = np.array(dfOrig.columns.to_list())
-    origTrain, origTest = divide_data_set(origData, ratio_train=ratio)
-    # dfMonthlyTrain, dfMonthlyTest = divide_data_set(dfMonthly, ratio_train=ratio)
+    origTrain, origTest = train_test_split(origData, train_size=ratio, random_state=seed)
     
     logger.info(f"Write data sets to csv", level=0)
     # Write to csv
@@ -185,9 +168,6 @@ def main(years, ratio, sep):
     write_numpy_to_csv(columns, f"columnNames_{years_addition}.csv", train=False, sep=sep)
     write_numpy_to_csv(origTrain, f"OriginateData_{years_addition}.csv", train=True, sep=sep)
     write_numpy_to_csv(origTest, f"OriginateData_{years_addition}.csv", train=False, sep=sep)
-
-    # write_to_csv(dfMonthlyTrain, f"MonthlyData_{years_addition}.csv", train=True, sep=sep)
-    # write_to_csv(dfMonthlyTest, f"MonthlyData_{years_addition}.csv", train=False, sep=sep)
 
 """
 ======================
@@ -198,5 +178,6 @@ Parameters for script
 years = [2013]
 ratio = 0.7
 sep = ','
+seed = 10
 
-main(years=years, ratio=ratio, sep=sep)
+main(years=years, ratio=ratio, sep=sep, seed=seed)
