@@ -138,6 +138,7 @@ dmypy.json
 *.ipynb
 # add files: 
 !JupyterNotebooks/ltv_analysis.ipynb
+!JupyterNotebooks/ppm_analysis.ipynb
 
 # Data files
 Data/*.txt
