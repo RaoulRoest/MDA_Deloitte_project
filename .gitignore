@@ -135,8 +135,9 @@ dmypy.json
 *.Rhistory
 
 # JupyterNotebooks dir
-JupyterNotebooks/
 *.ipynb
+# add files: 
+!JupyterNotebooks/ltv_analysis.ipynb
 
 # Data files
 Data/*.txt
