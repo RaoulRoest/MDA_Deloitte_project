@@ -46,7 +46,7 @@ def get_test_env_path(filename, train=True):
 
 def main(years, ratio, sep, seed):
     logger.info("Load Data")
-    dfOrig = dataBuilder.build_data_set(years, recalculate=True)
+    dfOrig = dataBuilder.build_data_set(years, recalculate=False)
     
     logger.info(f"Divide data sets by ratio {ratio}", level=0)
     # Divide data set
@@ -69,10 +69,11 @@ Parameters for script
 ======================
 This script creates a test and train environment for modelling.
 """
-# years = range(2013, 2021)
-years = [2013]
-ratio = 0.7
-sep = ','
-seed = 10
+ys = range(2013, 2021)
+for y in ys:
+    years = [y]
+    ratio = 0.7
+    sep = ','
+    seed = 10
 
-main(years=years, ratio=ratio, sep=sep, seed=seed)
+    main(years=years, ratio=ratio, sep=sep, seed=seed)
