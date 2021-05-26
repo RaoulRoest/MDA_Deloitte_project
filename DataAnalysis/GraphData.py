@@ -301,7 +301,8 @@ dfOrigNoPrepayment=dfOrig.loc[loanidsNoPrepayment]
 dfOrigNoFullPrepayment=dfOrigNoPrepayment.append(dfOrigPartialPrepayment)
 dfOrigNoPartialPrepayment=dfOrigNoPrepayment.append(dfOrigFullPrepayment)
 dfOrigPartialOrFullPrepayment=dfOrigFullPrepayment.append(dfOrigPartialPrepayment.append(dfOrigFullandPartialPrepayment))
-
+dfOrigFullPrepaymentoverPartialPrepayment=dfOrigFullPrepayment.append(dfOrigFullandPartialPrepayment)
+dfPrePayment=dfOrigFullPrepaymentoverPartialPrepayment.append(dfOrigPartialPrepayment)
 
 def plot_full_against_no_prepayment():   
     """Plot Full Prepayment against No Prepayment, hence no partial and no combination"""
@@ -418,6 +419,23 @@ def boxplot_features4(df1,df2,df3,df4, featureList):
                        xlabel="feature name")
     return fig
 
+def boxplot_features4b(df1,df2,df3,df4, featureList,column,name1,name2,name3,name4):
+    fig, ax = plt.subplots(1,1)
+    toPlot, notToPlot = check_dtypes(df1, featureList)
+    if toPlot:
+        plt.boxplot([df1[column],df2[column],df3[column],df4[column]])
+        plt.xticks([1, 2, 3, 4],[name1, name2, name3, name4])
+        plt.ylabel(column)
+    else:
+        logger.warning("THERE WERE NO FEATURES TO PLOT.", level=1)
+
+    if notToPlot:
+        featuresNotPlotted = "----".join(notToPlot)
+        logger.warning(f"THE FOLLOWING FEATURES WERE NOT PLOTTED :: {featuresNotPlotted}", level=1)
+    
+    gh.set_plot_params(ax,title="Boxplot of feature",xlabel="")
+    return fig
+
 def plot_prepayment_comparison(df):
     df["timescale"]=df["mths_remng"]/df["orig_loan_term"]
     df["payscale"]=df["current_upb"]/df["orig_upb"]
@@ -428,14 +446,35 @@ def plot_prepayment_comparison(df):
     gh.save_plot(fig,"PrePayment Monthly File", "MonthlyFile/PrePayment")
     plt.close()
     
-plot_full_against_no_prepayment()
-plot_full_against_no_full_prepayment()
-plot_partial_against_no_prepayment()
-plot_partial_and_full_against_no_prepayment()
-plot_partial_or_full_against_no_prepayment()
+# plot_full_against_no_prepayment()
+# plot_full_against_no_full_prepayment()
+# plot_partial_against_no_prepayment()
+# plot_partial_and_full_against_no_prepayment()
+# plot_partial_or_full_against_no_prepayment()
 
+from DependenceTests import ks_test_two_df
+ks_test_two_df(dfOrigNoPrepayment,dfOrigFullPrepaymentoverPartialPrepayment,["orig_upb"])
+ks_test_two_df(dfOrigNoPrepayment,dfOrigPartialPrepayment,["orig_upb"])
+ks_test_two_df(dfOrigNoPrepayment,dfPrePayment,["orig_upb"])
+ks_test_two_df(dfOrigFullPrepaymentoverPartialPrepayment,dfOrigPartialPrepayment,["orig_upb"])
 
-        
+fig=boxplot_features4b(dfOrigNoPrepayment,dfOrigFullPrepaymentoverPartialPrepayment, dfOrigPartialPrepayment, dfPrePayment,["ltv"],"ltv","No Prepayment", "Full Prepayment", "Partial Prepayment", "Full or Partial Prepayment")
+#fig.tight_layout()
+plt.show()
+#gh.save_plot(fig, f"Boxplot_of_lltv_{years}_", "Preliminairy/Boxplots")
+#plt.close()  
+
+fig=boxplot_features4b(dfOrigNoPrepayment,dfOrigFullPrepaymentoverPartialPrepayment, dfOrigPartialPrepayment, dfPrePayment,["cltv"],"cltv","No Prepayment", "Full Prepayment", "Partial Prepayment", "Full or Partial Prepayment")
+fig.tight_layout()
+plt.show()
+#gh.save_plot(fig, f"Boxplot_of_cltv_{years}_", "Preliminairy/Boxplots")
+#plt.close() 
+
+fig=boxplot_features4b(dfOrigNoPrepayment,dfOrigFullPrepaymentoverPartialPrepayment, dfOrigPartialPrepayment, dfPrePayment,["orig_upb"],"orig_upb","No Prepayment", "Full Prepayment", "Partial Prepayment", "Full or Partial Prepayment")
+fig.tight_layout()
+plt.show()
+#gh.save_plot(fig, f"Boxplot_of_upb_{years}_", "Preliminairy/Boxplots")
+#plt.close() 
         
     
     

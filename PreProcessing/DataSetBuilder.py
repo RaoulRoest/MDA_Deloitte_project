@@ -165,7 +165,7 @@ def add_numeric_dummies(df, column):
 EXAMPLE
 """
 if __name__ == "__main__":
-    years=[2014]
+    years=[2013]
     recalc = False
     
     dfOrig = build_data_set(years=years, recalculate=recalc)
