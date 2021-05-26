@@ -107,7 +107,7 @@ def get_monthly_replace_dict():
         "dt_lst_pi" : "Not available",
         "dt_zero_bal" : "Not applicable",
         "flag_mod" : "N",
-        "repch_flag" : "Y",
+        "repch_flag" : "Not applicable",
         "defered_payment_plan" : "N",
         "step_mod_flag" : " ",
         "delinquency_due_to_disaster" : "N",
