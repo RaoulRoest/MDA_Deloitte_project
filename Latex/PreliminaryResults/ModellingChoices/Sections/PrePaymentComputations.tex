@@ -1,87 +1,51 @@
-\section{Obtain monthly payments in annuity mortgage}
-    The annuity mortgage is characterize by its equal payments. 
-    Suppose payments $B_1, \ldots, B_n$, for these payments the relation
-    \begin{equation}
-        B_1 = \ldots = B_n 
-    \end{equation}
-    holds. Note that at $t_0$ there is no payments (as the mortgage is granted).
-    Let us denote the interest at time $t$ as $r_t$. Since we look at fixed mortgages 
-    the relation
-    \begin{equation}
-        r_1 = \ldots = r_n
-    \end{equation}
-    holds for the interest rates. 
-    Let us assume that we are in a risk neutral market. When we valuate the loan in the risk 
-    neutral market, the present value of the outstanding debt, should be equal to the loan
-    and hence
-    \begin{equation}
-        L = B (1 + r)^{-t_1} + \ldots B (1 + r)^{-t_n}
-    \end{equation}
-    where $L$ is the granted loan. Using the geometric series, the value of each payment 
-    $B$ can be determined: 
-    \begin{equation}
-        B\left[
-            \displaystyle\sum_{j=1}^{n} \left(
-                (1 + r)^{-1}
-                \right)^{t_j}  
-        \right] = 
-        B\left[
-            \displaystyle\sum_{j=0}^{n} \left(
-                (1 + r)^{-1}
-                \right)^{t_j} - 1  
-        \right] = 
-        B \left[
-            \dfrac{
-                1 - \left(
-                    \dfrac{1}{1 + r}
-                \right)^{n+1}
-                }
-                {
-                    1 - \dfrac{1}{(1 + r)}
-                } - 1
-        \right].
-    \end{equation}
-    From this the monthly payments $B$ can be determined: 
-    \begin{equation}
-        B = \dfrac{L}{
-                \left[
-                    \dfrac{
-                        1 - \left(
-                            \dfrac{1}{1 + r}
-                        \right)^{n+1}
-                        }
-                        {
-                            1 - \dfrac{1}{(1 + r)}
-                        } - 1
-                \right]        
-            }
-    \end{equation}
-    The term 
-    \begin{equation}
-        \dfrac{
-            1 - \left(
-                \dfrac{1}{1 + r}
-            \right)^{n+1}
-            }
-            {
-                1 - \dfrac{1}{(1 + r)}
-            } - 1
-    \end{equation}
-    will we call the monthly factor. Note that the interest rate given is a yearly rate. The 
-    corresponding monthly rate can be calculated by: 
-    \begin{equation}
-        (1 + r)^{\frac{1}{12}}.
-    \end{equation} 
-
-    Now to get the outstanding debt at time $t_j$, 
-    \begin{equation}
-        U_{t_j} = B \left(
-            (1+r)^1 + (1 + r)^2 + \ldots + (1 + r)^{t_n - t_j}
-            \right)
-    \end{equation}
-    where $t_n$ is the last payment date. This yields a payment of the 
-    upb at time $t_j$ of
-    \begin{equation}
-        U_{t_{j-1}} - U_{t_{j}} = 
-        B (1 + r)^{t_n - t_j + 1}  
-    \end{equation}
+The annuity mortgage is characterize by its equal payments. 
+Suppose payments $B_1, \ldots, B_n$, for these payments the relation
+\begin{equation}
+    B_1 = \ldots = B_n 
+\end{equation}
+holds. Note that at $t_0$ there is no payments (as the mortgage is granted).
+Let us denote the interest at time $t$ as $r_t$. Since we look at fixed mortgages 
+the relation
+\begin{equation}
+    r_1 = \ldots = r_n
+\end{equation}
+holds for the interest rates. 
+Let us assume that we are in a risk neutral market. When we valuate the loan in the risk 
+neutral market, the present value of the outstanding debt, should be equal to the loan
+and hence
+\begin{equation}
+    L = B (1 + r)^{-t_1} + \ldots B (1 + r)^{-t_n}
+\end{equation}
+where $L$ is the granted loan. Using the geometric series, the value of each payment 
+$B$ can be determined: 
+\begin{equation}
+    B\left[
+        \displaystyle\sum_{j=1}^{n} (1 + r)^{-t_j}  
+    \right] = 
+    B\left[
+        \displaystyle\sum_{j=0}^{n} (1 + r)^{-t_j} - 1  
+    \right] = 
+    B \left[
+        \dfrac{1 - (1 + r)^{n+1}}{1 - (1 + r)} - 1
+    \right] =
+    B \left[
+        \dfrac{1 - (1 + r)^{n+1}}{r}  - 1
+    \right].
+\end{equation}
+From this the monthly payments $B$ can be determined: 
+\begin{equation}
+    B = \dfrac{L}{
+        \left(
+            \dfrac{1 - (1 + r)^{n+1}}{r} - 1
+        \right)
+    }
+\end{equation}
+The term 
+\begin{equation}
+    \dfrac{1 - (1 + r)^{n+1}}{r} - 1        
+\end{equation}
+will we call the monthly factor. Note that the interest rate given is a yearly rate. The 
+corresponding monthly rate can be calculated by: 
+\begin{equation}
+    (1 + r)^{\frac{1}{12}}.
+\end{equation} 
