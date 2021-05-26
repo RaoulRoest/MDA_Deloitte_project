@@ -116,8 +116,4 @@ class DataLoader():
         dfMonthlyClean.set_index(["id_loan", "svcg_cycle"], inplace=True) #Index on loan index, and timestep. 
         dfOrigClean.set_index("id_loan", inplace=True) #Index on loan index
             
-<<<<<<< HEAD
         return dfOrigClean, dfMonthlyClean
-=======
-        return dfOrigClean, dfMonthlyClean  
->>>>>>> parent of 0850c4e (Added some things)
