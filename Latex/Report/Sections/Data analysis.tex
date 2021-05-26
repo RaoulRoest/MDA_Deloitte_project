@@ -42,7 +42,7 @@ In this section, preparation work is completed. First, the data is cleaned and a
         2017 & 29460 & 2479 & 16959 & 938 \\
         2018 & 27368 & 1764 & 19901 & 808 \\
         2019 & 37041 & 1049 & 11426 & 182 \\
-        2020 & 24160 & 39 & 623 & 0 \\
+        2020 & 24160 & 39 & 623 & 0 \\\hline
         Total & 209732 & 19074 & 134996 & 9800
 		\end{tabular}
 		\caption{Classification of loans for years 2013-2020 with threshold percentage of 0.1.}
@@ -233,7 +233,13 @@ In this section, preparation work is completed. First, the data is cleaned and a
     
 
 \subsection{Interest incentive}
-We can further investigate the interest rate as a risk factor.
+We can further investigate the interest rate as a risk factor. Given with the date we also have the Mortgage US 15 over all the weeks between 2013 an 2020. This tells us the fixed interest rate that US home-buyers would pay if they take out a loan lasting 15 years.
 
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=\linewidth]{Latex/Report/Figures/mortgage15US.png}
+        \caption{Boxplot of CLTV of sample data. From left to right: No prepayment, Full prepayment, Partial prepayment and Full or Partial prepayment.}
+        \label{mortgage15us}
+    \end{figure}
 
 
