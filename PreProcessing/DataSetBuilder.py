@@ -126,11 +126,13 @@ def prepare_orig_data(dfOrig):
 def add_prepayment_info(dfOrig, dfPPM):
     columns_to_merge = [
         "prepayment_time_step",
-        "prepayment_type_FullPrepayment",
-        "prepayment_type_No Prepayment",
-        "prepayment_type_PartialPrepayment",
-        "prepayment_flag_False",
-        "prepayment_flag_True",
+        # "prepayment_type_FullPrepayment",
+        # "prepayment_type_No Prepayment",
+        # "prepayment_type_PartialPrepayment",
+        # "prepayment_flag_False",
+        # "prepayment_flag_True",
+        "prepayment_flag",
+        "prepayment_type",
     ]
     
     dfToMerge = prepare_ppm(dfPPM=dfPPM)
@@ -149,9 +151,12 @@ def prepare_ppm(dfPPM):
     dfPPM["prepayment_time_step"] = 0
     dfPPM.loc[dfPPM["prepayment_flag"] == True, "prepayment_time_step"] = dfPPM.loc[dfPPM["prepayment_flag"] == True, "time"]    
     
+    ppm_map = {"No Prepayment" : 0, "PartialPrepayment" : 1, "FullPrepayment" : 2}
+    dfPPM["prepayment_type"] = dfPPM["prepayment_type"].map(ppm_map)
+    
     dummyColumns = [
-        "prepayment_type",
-        "prepayment_flag"
+        # "prepayment_type",
+        # "prepayment_flag"
     ]
     for column in dummyColumns:
         dfPPM = add_numeric_dummies(dfPPM, column=column)
@@ -165,9 +170,11 @@ def add_numeric_dummies(df, column):
 EXAMPLE
 """
 if __name__ == "__main__":
-    years=[2014]
-    recalc = False
-    
-    dfOrig = build_data_set(years=years, recalculate=recalc)
-    
-    print(dfOrig)
+    ys = range(2013, 2021)
+    for y in ys:
+        years=[y]
+        recalc = True
+        
+        dfOrig = build_data_set(years=years, recalculate=recalc)
+        
+    dfOrig = build_data_set(years=ys, recalculate=True)
