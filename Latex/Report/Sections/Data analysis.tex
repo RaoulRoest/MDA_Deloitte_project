@@ -53,10 +53,10 @@ In this section, preparation work is completed. First, the data is cleaned and a
     As can seen in Table \ref{model_cleaned data_table}, sample data of every year consist of roughly 50000 loans. The exception is 2020 as this is involves recent loans and first the data needs to be gathered. For every year we observe a similar distribution of prepayments. However, there is some nuance. As time goes by, more loanees starts to prepay. Loanees getting a mortgage in 2013 are more likely to have prepaid an amount than loanees with a mortgage originating of 2020. This does however not change the potential risk drivers. During these years, nothing special happened which had a large impact on the economic system. Note, we are working with a small part of 2020. In general, we can assume the behaviour to be similar through the years.
     \textcolor{red}{Picture obtained by Tom!}
 
-\subsection{Importances}
+\subsection{Importances of the data}
     To ensure privacy, some characteristics of a loan and loanee are made general and hence difficult to work with. Some drivers of prepayment could be age and income of the loanee. Someone with a higher income is more likely to prepay, similar, someone older is more likely to have some extra money and thus possible prepay. However, these characteristics are not directly available in the data. Income is used to calculate several measures, but not given specifically. Age is never mentioned in the data although it is useful to predict prepayments.  
 
-    Although there is some relevant data missing, this data is used in the remainder of the report.  However, there is something wrong with the starting lines of the monthly performance files. In some cases, the current UPB rounded to the nearest thousand. This results in some strange behaviour of the payments of the loanees and need to be dealt with. There need to be set a bound to the classification of prepayments. This can be solved with use of a threshold as discussed later. 
+    Although there is some relevant data missing, this data format is used in the remainder of the report.  However, there is something wrong with the starting lines of the monthly performance files. In some cases, the current UPB rounded to the nearest thousand. This results in some strange behaviour of the payments of the loanees and need to be dealt with. There need to be set a bound to the classification of prepayments. This can be solved with use of a threshold as discussed later. 
     \\\\
     We discuss a small selection of characteristics of a loan, other characteristics behave similar and seem independent of prepayments. For a complete variable importance determination, see Section \ref{section_model}. 
     
@@ -171,9 +171,8 @@ In this section, preparation work is completed. First, the data is cleaned and a
             \caption{P-values of UPB (in which if both partial and full prepayments happen, it is denoted as full prepayment).}
 	        \label{model_Pvals_of_UPB}
         \end{table}
-        By isolation the data of year 2013, we observe the result given in Figure
         \noindent
-        \ref{model_UPB_against_prepayment}. Here we clearly see a smaller UPB resulting in more prepayments. 
+        By isolation the data of year 2013, we observe the result given in Figure         \ref{model_UPB_against_prepayment}. Here we clearly see a smaller UPB resulting in more prepayments. We can conclude that UPB is an important characteristic to predict prepayments. 
         \begin{figure}[H]
             \centering
             \begin{subfigure}{0.45\textwidth}
@@ -190,6 +189,45 @@ In this section, preparation work is completed. First, the data is cleaned and a
             \label{model_UPB_against_prepayment}
         \end{figure}
         
+    \subsubsection{Original interest rate}
+    At last, we consider the behaviour of characteristic original interest rate. It is expected that in loans with a higher interest rate, more prepayments are made. This follows from getting a loan somewhere else with lower interest rate and using this money to prepay the original loan. The data is split based on the kind of prepayment. This division is used to determine possible dependence between this characteristic. The p-values given in Table \ref{model_Pvals_of_int} suggest the data to be independent. This test is performed on a large amount of data and hence might be false. 
+    \begin{table}[H]
+        \centering
+            \begin{tabular}{lcl|c|c}
+            \multicolumn{3}{c}{Prepayment type} & P-values& KS-statistic \\\hline
+            No Prepayment & \& & Full Prepayment & 0 & 0.195919\\
+            No Prepayment & \& & Partial Prepayment & 0 & 0.079967\\
+            No Prepayment & \& & Full or Partial Prepayment & 0 & 0.165275 \\
+            Full Prepayment & \& & Partial Prepayment & 0 & 0.263374
+		    \end{tabular}
+            \caption{P-values of interest rates (in which if both partial and full prepayments happen, it is denoted as full prepayment).}
+	        \label{model_Pvals_of_int}
+        \end{table}
+        \noindent
+        A boxplot comparing the prepayment might back up the p-values. In Figure \ref{model_boxplot_int_rt}, a difference of behaviour is seen based on the type of prepayment. A prepayment happens more likely when the original interest rate is high. Which is as expected. However, the partial prepayments turn out to be made with smaller original interest rates. 
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=\linewidth]{Latex/Report/Figures/Boxplot_of_int_rt_[2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020]_.png}
+            \caption{Boxplot of original interest rate of sample data. From left to right: No prepayment, Full prepayment, Partial prepayment and Full or Partial prepayment.}
+            \label{model_boxplot_int_rt}
+        \end{figure}
+        \noindent
+        The influence of the original interest rate of year 2013 can be seen in Figure \ref{model_int_rt_against_prepayment}. Here, one observes again a higher interest rate implying more prepayments. Note the interest rate for full prepayments to be higher than the interest rate of partial prepayments. 
+        \begin{figure}[H]
+            \centering
+            \begin{subfigure}{0.45\textwidth}
+                \includegraphics[width=\linewidth]{Latex/Report/Figures/int_rt againts Full prepayments.png}
+                \caption{Interest rate against Full prepayments.}
+                \label{model_int_rt_against_full_prepayment}
+            \end{subfigure}
+            \begin{subfigure}{0.45\textwidth}
+                \includegraphics[width=\linewidth]{Latex/Report/Figures/int_rt againts Partial prepayments.png}
+                \caption{Interest rate against Partial prepayments.}
+                \label{model_int_rt_against_partial_prepayment}
+            \end{subfigure}
+            \caption{Original interest rate against magnitude of prepayments.}
+            \label{model_int_rt_against_prepayment}
+        \end{figure}
         
     
     
