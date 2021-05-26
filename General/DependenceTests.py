@@ -31,4 +31,12 @@ def ks_test_one_df(df,features=1):
             pvals[i,j]=P
             KS_statistic[i,j]=KSs    
     logger.info("KS-test completed on one dataframe")
+<<<<<<< HEAD
     return KS_statistic,pvals
+=======
+    return KS_statistic,pvals
+
+
+
+
+>>>>>>> parent of 0850c4e (Added some things)
