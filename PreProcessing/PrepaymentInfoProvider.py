@@ -178,6 +178,11 @@ def classify_prepayments(dfPPM, timeSkip):
     dfPPM.loc[condition_ppm & condition_full_ppm, ColumnNames.PrepaymentTypeName] = "FullPrepayment"
     dfPPM.loc[condition_ppm & condition_partial_ppm, ColumnNames.PrepaymentTypeName] = "PartialPrepayment"
     
+    # Fix time skip outcome:
+    condition_full_or_partial = (dfPPM[ColumnNames.PrepaymentTypeName] == "FullPrepayment") | (dfPPM[ColumnNames.PrepaymentTypeName] == "PartialPrepayment"); 
+    dfPPM.loc[~condition_full_or_partial, ColumnNames.FlagName] = False
+    dfPPM.loc[~condition_full_or_partial, ColumnNames.TimeColumnName] = 0 
+    
 """
 =====================
 Test Outcomes with simple
@@ -191,7 +196,7 @@ work.
 if __name__ == "__main__":
     logger.info("Retrieve data")
     loader = DataLoader()
-    dfOrig, dfMonthly = loader.get_data_set([2013])
+    dfOrig, dfMonthly = loader.get_data_set([2016])
 
     logger.info("Calculate Prepayment")
     dfPPM = calculate_prepayment_info(dfOrig, dfMonthly)

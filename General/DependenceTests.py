@@ -32,7 +32,3 @@ def ks_test_one_df(df,features=1):
             KS_statistic[i,j]=KSs    
     logger.info("KS-test completed on one dataframe")
     return KS_statistic,pvals
-
-
-
-
