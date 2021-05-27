@@ -111,7 +111,7 @@ class DataLoader():
         dfMonthly = self.get_all_monthly_performance_years(years)
         
         dfOrigClean, dfMonthlyClean = cleaner.clean_data(dfOrig, dfMonthly)
-        
+                
         # Set indexes for faster searches
         dfMonthlyClean.set_index(["id_loan", "svcg_cycle"], inplace=True) #Index on loan index, and timestep. 
         dfOrigClean.set_index("id_loan", inplace=True) #Index on loan index
