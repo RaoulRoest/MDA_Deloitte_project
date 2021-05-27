@@ -79,7 +79,14 @@ def main(years, ratio, ppm_th, ppm_skip_mnths, sep, seed):
                                           dfMonthly=dfMonthlyClean, 
                                           threshold_percentage=ppm_th, 
                                           timeSkip=ppm_skip_mnths)
-    dfMonthly = dfMonthlyClean.reset_index().merge(dfPPM[["id_loan", "svcg_cycle", "prepayment_type"]], 
+    
+    ppm_columns = [
+        "id_loan", 
+        "svcg_cycle", 
+        "prepayment_type",
+        "zeroPaymentFlag",
+        ]
+    dfMonthly = dfMonthlyClean.reset_index().merge(dfPPM[ppm_columns], 
                                                    how="left", 
                                                    on=["id_loan", "svcg_cycle"]).set_index(["id_loan", 
                                                                                             "svcg_cycle"])
@@ -111,7 +118,7 @@ Parameters for script
 This script creates a test and train environment for modelling.
 """
 # ys = range(2013, 2021)
-ys = [2013]
+ys = range(2013, 2021)
 ratio = 0.7
 
 ppm_threshold = 0.1
@@ -129,3 +136,11 @@ for y in ys:
          ppm_skip_mnths=ppm_months_to_skip, 
          sep=sep, 
          seed=seed)
+
+# Run one time for total:
+main(years=ys, 
+     ratio=ratio, 
+     ppm_th=ppm_threshold, 
+     ppm_skip_mnths=ppm_months_to_skip, 
+     sep=sep, 
+     seed=seed)

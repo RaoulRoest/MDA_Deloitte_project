@@ -33,7 +33,8 @@ class InputVariables():
             (df["prepayment_type"] == 2, Aggregations.Sum, "partial_prepayment_flag"),
             (df["current_upb"] == 200000, Aggregations.Sum, "cur_upb_greater_than_200000_flag"),
             (df["eltv"] > 140, Aggregations.Sum, "eltv_greater_than_140_flag"),  
-            (df["repch_flag"] == "Y", Aggregations.Sum, "repch_flag"),  
+            (df["repch_flag"] == "Y", Aggregations.Sum, "repch_flag"),
+            (df["zeroPaymentFlag"] == False, Aggregations.Sum, "zeroPaymentFlag_count"),
         ]
     
     TimeStepColumn = "t"
