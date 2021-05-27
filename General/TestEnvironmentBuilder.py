@@ -1,5 +1,6 @@
 import os
 import sys
+
 curDir = os.path.dirname(__file__)
 sys.path.append(os.path.join(curDir, "..", "PreProcessing"))
 
@@ -12,6 +13,10 @@ import PathUtilities as pu
 import ConsoleWriter as logger
 import CsvWriter as csv
 
+from DataLoader import DataLoader
+import PrepaymentInfoProvider as ppm
+import PreprocessMonthlyData as preProcess
+
 import DataSetBuilder as dataBuilder
 
 class EnvVariables():
@@ -20,6 +25,28 @@ class EnvVariables():
     TestName = "Test"
     TrainName = "Train"
     
+    # last time step in the data set
+    LastYear = 2020 
+    LastMonth = 9
+    
+    # first time step in the data set
+    FirstYear = 2013 
+    FirstMonth = 2
+
+def get_months(year1, year2, month1, month2):
+    if(year2 > year1):
+        return (year2 - year1) * 12 + (month2 - month1)
+    else:
+        return (year1 - year2) * 12 + (month1 - month2)      
+
+def get_time_step_by_year(year, month):
+    return get_months(year, EnvVariables.FirstYearm, month, EnvVariables.FirstMonth)
+
+def get_time_step_by_ratio(ratio):
+    diff = get_months(EnvVariables.LastYear, EnvVariables.FirstYear, 
+                      EnvVariables.LastMonth, EnvVariables.FirstMonth)
+    return int(diff * ratio)
+
 def get_environment_path():
     dataDir = pu.get_data_dir()
     envFolder = os.path.join(dataDir, EnvVariables.EnvName)
@@ -44,10 +71,31 @@ def get_test_env_path(filename, train=True):
         
     return os.path.join(folderPath, filename) 
 
-def main(years, ratio, sep, seed):
+def main(years, ratio, ppm_th, ppm_skip_mnths, sep, seed):
     logger.info("Load Data")
-    dfOrig = dataBuilder.build_data_set(years, recalculate=False)
+    dl = DataLoader()
+    dfOrigClean, dfMonthlyClean = dl.get_data_set(years=years)
+    dfPPM = ppm.calculate_prepayment_info(dfOrig=dfOrigClean, 
+                                          dfMonthly=dfMonthlyClean, 
+                                          threshold_percentage=ppm_th, 
+                                          timeSkip=ppm_skip_mnths)
     
+    ppm_columns = [
+        "id_loan", 
+        "svcg_cycle", 
+        "prepayment_type",
+        "zeroPaymentFlag",
+        ]
+    dfMonthly = dfMonthlyClean.reset_index().merge(dfPPM[ppm_columns], 
+                                                   how="left", 
+                                                   on=["id_loan", "svcg_cycle"]).set_index(["id_loan", 
+                                                                                            "svcg_cycle"])
+    
+    timeStep = get_time_step_by_ratio(ratio)                                               
+    dfOrig = dataBuilder.build_data_set(years, recalculate=True, timeStep=timeStep, dfPPM=dfPPM)
+    dfMonthly = preProcess.preprocess_monthly_data(dfMonthly=dfMonthly, current_time_step=timeStep)
+    dfOrig = preProcess.add_monthly_data_to_orig_data(dfMonthly=dfMonthly, dfOrig=dfOrig)
+
     logger.info(f"Divide data sets by ratio {ratio}", level=0)
     # Divide data set
     dfOrig.reset_index(inplace=True)
@@ -69,11 +117,30 @@ Parameters for script
 ======================
 This script creates a test and train environment for modelling.
 """
+# ys = range(2013, 2021)
 ys = range(2013, 2021)
+ratio = 0.7
+
+ppm_threshold = 0.1
+ppm_months_to_skip = 6
+
+sep = ','
+seed = 10
+
 for y in ys:
     years = [y]
-    ratio = 0.7
-    sep = ','
-    seed = 10
 
-    main(years=years, ratio=ratio, sep=sep, seed=seed)
+    main(years=years, 
+         ratio=ratio, 
+         ppm_th=ppm_threshold, 
+         ppm_skip_mnths=ppm_months_to_skip, 
+         sep=sep, 
+         seed=seed)
+
+# Run one time for total:
+main(years=ys, 
+     ratio=ratio, 
+     ppm_th=ppm_threshold, 
+     ppm_skip_mnths=ppm_months_to_skip, 
+     sep=sep, 
+     seed=seed)

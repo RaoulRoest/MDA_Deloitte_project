@@ -100,7 +100,7 @@ def calculate_shifted_ubps(upb):
 
 def calc_upb_part(dfPPM):
     interest = 1 / (1 + dfPPM["int_rt"] / (12 * 100))
-    dfPPM[ColumnNames.TimeColumnName] = dfPPM["orig_loan_term"] - dfPPM["mths_remng"]
+    dfPPM[ColumnNames.TimeColumnName] = dfPPM.groupby("id_loan").cumcount()
     interest = interest ** (dfPPM[ColumnNames.TimeColumnName] + 1) 
     dfPPM[ColumnNames.ScheduledUpbPart] = dfPPM[ColumnNames.ScheduledPaymentsName] * interest
 
