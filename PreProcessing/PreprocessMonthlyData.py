@@ -44,6 +44,7 @@ def set_time_steps(dfMonthly):
 
 def preprocess_monthly_data(dfMonthly, current_time_step=None):
     
+    
     # Create time steps, if needed
     if current_time_step is not None:
         dfMonthly[InputVariables.TimeStepColumn] = set_time_steps(dfMonthly=dfMonthly)
@@ -83,7 +84,7 @@ if __name__ == "__main__":
     dfOrig = dataBuilder.build_data_set(years=years)
     dfPPM = ppm.calculate_prepayment_info(dfOrig=dfOrigOld, dfMonthly=dfMonthly)
     
-    dfMonthly = dfMonthly.reset_index().merge(dfPPM[["id_loan", "svcg_cycle", "prepayment_type"]], 
+    dfMonthly = dfMonthly.reset_index().merge(dfPPM[["id_loan", "svcg_cycle", "prepayment_type","zeroPaymentFlag"]], 
                                 how="left", 
                                 on=["id_loan", "svcg_cycle"]).set_index(["id_loan", "svcg_cycle"])
     dfMonthly = preprocess_monthly_data(dfMonthly=dfMonthly, current_time_step=100)

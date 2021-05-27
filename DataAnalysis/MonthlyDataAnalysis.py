@@ -177,6 +177,7 @@ def process_monthly_data(dfCombine, dfOrig, noNum_featureDict, num_featureDict, 
 
 def perform_analysis(years):
     dfOrig, dfCombine = get_data(years=years)
+    
     noNum_featureDict, num_featureDict = get_features(dfCombine=dfCombine)
     process_monthly_data(dfCombine=dfCombine, 
                          dfOrig=dfOrig, 
