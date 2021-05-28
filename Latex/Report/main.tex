@@ -40,35 +40,57 @@
 \input{../Utilities/Commands.tex}
 
 \begin{document}
-    % \maketitle
     \begin{titlepage}
         \vspace*{\fill}
         \centering
         \par\noindent\rule{\textwidth}{0.4pt} \\[0.7cm]
-        {\Huge Report Deloitte project prepayments }\\[0.5cm]
-        \par\noindent\rule{\textwidth}{0.4pt} \\[1cm]
+        
+        % Title
+        {
+            \Huge Report Deloitte project prepayments 
+        }\\[0.5cm]
+        
+        % Rule
+        \par\noindent\rule{\textwidth}{0.4pt}\\[1cm]
+        
+        % Names
         {\large 
-        Aristos Kaloudis 5364493 \\
-        Tom Heijnders 4362659 \\
-        Sebastiaan van Schagen 4684877 \\
-        Raoul Roest 4299086}\\[0.6cm]
-        {\large Supervisor:\\ 
-        Dr. D. Kurowicka (TUDelft)
+            Aristos Kaloudis 5364493 \\
+            Tom Heijnders 4362659 \\
+            Sebastiaan van Schagen 4684877 \\
+            Raoul Roest 4299086
+        }\\[0.6cm]
+
+        % Supervisor
+        {
+            \large Supervisor:\\ 
+            Dr. D. Kurowicka (TUDelft)
         }\\[1cm]
+        
+        % Date
         \today\\[5cm]
-        \begin{figure*}[h]
-        \centering
-        \begin{subfigure}{0.45\textwidth}
-        \includegraphics[width=6cm]{Latex/Report/Figures/TU_Delft_logo_RGB.png}
-        \end{subfigure}
-        \begin{subfigure}{0.45\textwidth}
-        \includegraphics[width=5cm]{Latex/Report/Figures/Logo_Deloitte.png}
-        \end{subfigure}
+        
+        % Images
+        \begin{figure*}[h]    
+            \centering
+            % Delft image
+            \begin{subfigure}{0.45\textwidth}
+                \includegraphics[width=6cm]{Figures/TU_Delft_logo_RGB.png}
+            \end{subfigure}
+    
+            % Deloitte image
+            \begin{subfigure}{0.45\textwidth}
+                \includegraphics[width=5cm]{Figures/Logo_Deloitte.png}
+            \end{subfigure}
         \end{figure*}
+    
         \vfill
+    
     \end{titlepage}
 
+    % TOC
     \tableofcontents
+
     \newpage
     
     % Sections
@@ -77,19 +99,19 @@
     \newpage
     
     \section{Data analysis}\label{section_data_analysis}
-    \input{Latex/Report/Sections/Data analysis}
+    \input{Sections/Data analysis}
     \newpage
     
     \section{Model}\label{section_model}
-    \input{Latex/Report/Sections/Model}
+    \input{Sections/Model}
     \newpage
     
     \section{Results}\label{section_results}
-    \input{Latex/Report/Sections/Results}
+    \input{Sections/Results}
     \newpage
     
     \section{Discussion}\label{section_discussion}
-    \input{Latex/Report/Sections/Discussion}
+    \input{Sections/Discussion}
     \newpage
     
     \printbibliography
