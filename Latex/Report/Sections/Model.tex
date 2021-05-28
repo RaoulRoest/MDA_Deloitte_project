@@ -1,17 +1,130 @@
-The data has been analysed and a model to predict prepayment need to be chosen. In similar instances, the multinomial logistic model is used often. This is the first model considered.
+In the previous chapter, the data has been analysed. Now a model needs to be chosen
+to estimate the probabilities of prepayment. In similar instances, the multinomial 
+logistic model is often used. Also, this model is suggested by the company. For this
+reason this model is chosen 
+
+\subsection{Model Description}
+    % Modelling the prepayment probabilities. 
+    The model will predict prepayment probabilities. Generally, results of the model 
+    will be obtained in the following way. 
+    First, there is a variable selection. Based on this variable
+    selection, certain features will be used in predicting the prepayment  
+    probabilities. The selected features will be on a client level and can be used to
+    estimate the specific probabilities of prepayment on a client level. Both the 
+    full and the partial prepayment will be estimated, i.e. the probability that 
+    a client with certain characteristics will do a partial or full prepayment.
+    As the data also includes time dependence, a set up which also takes time into
+    consideration will be discussed. To this extend, suppose a portfolio $P$ with 
+    client data, a time step $t$ on which the estimation will be performed and 
+    a future time horizon $T$. Using the data up to the moment $t$, for the whole 
+    portfolio, the model will perform an estimation of the probabilities per client
+    over the given time horizon $T$. 
+    \\\\ 
+    % Getting the input data
+    The total data set can be splitted in two data sets, one for the client data 
+    given at the moment of take out of the mortgage (which will be referred at as
+    the originate data set) and one which contains information of the mortgage over 
+    time (which will be referred to as the monthly data set). 
+    For a client $i$ in $P$ the data provides certain information on the moment of 
+    take out of the mortgage; $x_1^i, \ldots, x_n^i$ and time dependent information 
+    $x_1^{t, i}, \ldots, x_m^{t, i}$. As for all the clients, the same procedure 
+    is used, the $i$ is omitted for convenience, hence $x_k^i \equiv x_k$ and
+    $x_l^{t, i} \equiv x_l^t$ for each $k \in \{1, \ldots, n\}$ and $l \in \{1, 
+    \ldots m \}$.  
+    The fixed time information can be inferred
+    from the originate data and the time dependent data can be inferred from the 
+    monthly data. As the model evaluate the data on a specific time step, it can
+    evaluate the features $x_1, \ldots, x_n$ directly. On the other hand, the data
+    which depends on time cannot be used directly and needs to be transformed.
+    This transformation will be such that each feature on a certain time step 
+    includes all the information up to that moment. To get this information, a 
+    certain condition $c_k$ is set. For all time steps $t_i < t$, this condition 
+    will be verified over the data. To bring it to one number on time $t$, the 
+    evaluations of the condition over all time steps will be aggregated using some 
+    aggregation operator. To make this more clear, consider the following example.
+    Suppose a client $i \in P$ and the feature $x^t$, which describes if the 
+    prepayment type (i.e. no, partial or full) at time $t$. Now, consider the 
+    condition $c_k$:
+    \begin{equation}
+        c_k(x^t) = \left\{
+        \begin{array}{l l l l l}
+            1 & \text{if there is a partial prepayment} \\ 
+            0 & \text{else}
+        \end{array}
+        \right.
+    \end{equation}
+    Evaluating this condition, over all time steps up to the moment $t$ and summing 
+    over those evaluations, yield a new feature $x$. This feature represents the count 
+    of partial prepayments up to time $t$ for that client. 
+    Now $x$ can be used as a feature to predict the prepayment probabilities for 
+    this client. 
+    \\\\
+    % Addressing the output
+    As described above, the output of the model will be probabilities which are related 
+    to the prepayment risk of a specific client. More specifically, suppose a random 
+    variable $Y$ which can take values in $\{0, 1, 2\}$ where $Y=0$ is no prepayment, 
+    $Y=1$ is a partial prepayment and $Y=2$ represents a full prepayment. The model 
+    will return the probabilities $P(Y = 0 | X) = p_0, P(Y = 1 | X) = p_1$ and 
+    $P(Y = 2 | X) = p_2$
+    for given features $X = [x_1, \ldots, x_{n+e}]$ (where the number of features 
+    $n+e$ is based on the derived features from the monthly data and the variable 
+    selection). The predicted probability $p_j, \ j \in \{0, 1, 2\}$ is the probability 
+    that that prepayment state will be hit by the client within the interval $[t, T]$. 
 
 \subsection{Multinomial logistic model}
 
+For our analysis, the used model is the multinomial logit model; a generalisation of the binomial logistic regression for target variable of more than two classes.
 
+% \textcolor{red}{(Theory part)}
 
+Initially, we aggregated all our originate data, that is the data sets that contain information for specific loans as mentioned in Section \ref{section_data_analysis}.
 
-\textcolor{red}{\subsection{Possible second model if time allows}}
+We then split the data set into two separate ones. A train set which contained 70\% of the observations of the data set and which we used to train our model and a test set, containing the rest of the observations and which we used to assess the performance of the model.
+
+% \textcolor{red}{\subsection{Possible second model if time allows}}
 
 
 \subsection{Variable selection}
-The importance of variable is derived with use of lasso regression. Lasso stands for least absolute shrinkage and selection operator. For a system of equations $$Y=X\beta +\epsilon$$ the lasso estimator is defined by $$min(||Y-X\beta||^2+\lambda||\beta||_1).$$
+For reasons of computational time, to avoid possible overfitting and to have an alternative model to compare with our initial one, we thought of selecting a subset of feature. We used the LASSO multinomial regression. Lasso stands for least absolute shrinkage and selection operator. Multinomial LASSO, just as LASSO regression tends to shrink not important variables and keep only those that are significant in the final model. For a system of equations $$Y=X\beta +\epsilon$$ the lasso estimator is defined by 
+$$\min_\beta(||Y-X\beta||^2+\lambda||\beta||_1).$$
+
 $\lambda$ denotes the penalty given by lasso regression and determines the bias of the estimator. 
-\textcolor{red}{Variable selection obtained with lasso}
+In the multinomial case we consider an extension of that method. In this case, there are more levels need to consider. While working with $K$ levels, in the multinomial case, one uses the following prediction function:
+
+$$Pr(G=k|X=x)=\frac{e^{\beta_{0k}+\beta_k^T x}} {\sum_{l=1}^K e^{\beta_{0l}+\beta_l^T x}}$$
+By setting $p_l(x_i)=Pr(G=l|x_i)$, $g_i\in \{1,2, \hdots, K\}$ and maximizing the log likelihood, one obtains \parencite{Friedman_2010}: 
+$$\max_{\{\beta_{0k},\beta_k\}_1^K}\left[\frac{1}{N}\sum_{i=1}^N \log(p_{g_i}(x_i))-\lambda \sum_{l=1}^K P_\alpha (\beta_l) \right]$$. 
+
+\noindent
+This function can be rewritten as 
+$$l(\{\beta_{0k},\beta_k\}_1^K)=-\left[ \frac{1}{N} \sum_{i=1}^N\left( \sum_{k=1}^Ky_{il}(\beta_{0k}+x_i^T\beta_k)-\log\left(\sum_{l=1}^K e^{\beta_{0l}+x_i^T\beta_l}\right)\right)\right],$$
+in which $Y$ is the $N\times K$ indicator response matrix. Matrix $Y$ consists of $y_{ik}=I(g_i=l)$ \parencite{Friedman_2010}. 
+\\\\
+In this case, the elastic net penalized negative log-likelihood function with $\alpha=1$ is given by \parencite{hastie2016introduction}:
+$$l(\{\beta_{0k},\beta_k\}_1^K)=-\left[ \frac{1}{N} \sum_{i=1}^N\left( \sum_{k=1}^Ky_{il}(\beta_{0k}+x_i^T\beta_k)-log\left(\sum_{l=1}^K e^{\beta_{0l}+x_i^T\beta_l}\right)\right)\right] + \lambda \sum_{j=1}^p ||\beta_j||_q.$$
+
+% \textcolor{red}{Variable selection obtained with lasso}
 
 \subsection{Performance criteria}
-%ROC-curve
+% \textcolor{red}{ROC-AUC}
+To assess the performance of our model we used an extension of the ROC curve for multiple classes. In the typical binomial ROC plot, we can calculate the AUC, that is the Area Under the (ROC) Curve, as follows. Consider $p(x)$ the probability that x belongs to class 0. If $f(p)=f(p(x)|0)$ the probability function of 0 class points belonging to class 0 and $g(p(x)|1)$ the probability function of class 1 points belonging to class 0, then we can plot their corresponding cumulative distributions F and G against each other.
+
+The resulting plot with $G(p)$ on the vertical axis and $F(p)$ on the horizontal is the ROC curve. If the ROC curve lies above the positive slope diagonal, then we have a better than random model. The area under the curve is then our AUC. A perfect model would yield an AUC of 1, a random one 0.5 and a completely wrong one 0.
+For multiclass prediction models, plotting the ROC curve is not really feasible. But obtaining the AUC is possible, extending the definition to more classes. Considering $i=0,1,2,...,c-1$ classes with $c>2$, and $p(i|x)$ the respective probability functions. For any pair of classes i and j, we define $A(i|j)$ as the probability that a randomly selected observation from the jth class will have a lower estimated probability of belonging to class i than a randomly drawn member of class i.
+
+For the two class case, obviously $A(i|j) = A(j|i)$. But it doesn't generally hold.
+
+
+\[A(i|j)=\frac{S_i-n_i(n_i+1)/2}{n_in_j}
+\], where $n_i$ is the number of observations within the ith class.
+
+$A(i,j) = \frac{1}{2}(A(i|j)+A(j|i))$.
+Then, the overall AUC is given by the M measure, where \[M=\frac{2}{c(c-1)}\Sigma_{i,j}A(i,j)\]
+
+% \textcolor{red}{AIC}
+
+Akaike's Information Criterion, aka AIC, is obtained by the following equation:
+\[AIC = 2k-2ln(L)
+\]
+where k is the number of predictors and L is the maximum value of the likelihood function for the model. Goodness of fit is assessed by the likelihood function and then penalised by the number of parameters to avoid overfitting. Thus, between two models having a similar maximum likelihood, the one with fewer parameters will be preferred based on the AIC measure.
+
