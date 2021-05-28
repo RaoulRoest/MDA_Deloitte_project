@@ -163,3 +163,4 @@ Data/**/*.csv
 *.bcf
 
 *.pdf
+!ProjectDocuments/*.pdf
