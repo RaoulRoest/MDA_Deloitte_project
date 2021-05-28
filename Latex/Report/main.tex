@@ -18,7 +18,7 @@
 \usepackage{color}
 \usepackage{hyperref}
 \usepackage{cleveref}
-\usepackage{autonum}
+%\usepackage{autonum}
 \usepackage{tabularx}
 \usepackage{caption}
 \usepackage{subcaption}
@@ -28,31 +28,16 @@
 \usepackage{titling}
 \usepackage{caption}
 \usepackage{subcaption}
-
-% \usepackage[
-%     style=ieee
-%     ]{biblatex}
-% \addbibresource{references.bib}
+\usepackage[
+    backend=biber,
+    style=apa
+    ]{biblatex}
+\addbibresource{Sections/References.bib}
 
 \input{../Utilities/LstConfigs.tex}
 \input{../Utilities/LayoutConfigs.tex}
 \input{../Utilities/Exercise_utils.tex}
 \input{../Utilities/Commands.tex}
-
-% General document info.
-% \title{Report Deloitte project prepayments}
-% \author{
-%     Aristos Kaloudis 5364493 \\
-%     Tom Heijnders 4362659 \\
-%     Sebastiaan van Schagen 4684877 \\
-%     Raoul Roest 4299086
-% }
-
-
-
-% \date{\today}
-
-
 
 \begin{document}
     % \maketitle
@@ -105,6 +90,9 @@
     
     \section{Discussion}\label{section_discussion}
     \input{Latex/Report/Sections/Discussion}
+    \newpage
+    
+    \printbibliography
     \newpage
     
     % Appendices
