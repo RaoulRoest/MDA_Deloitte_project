@@ -1,42 +1,81 @@
-A mortgage is a common agreement between two parties: lender and 
-loanee. The lender, mostly banks, lends money to the loanee. The 
-money is secured with collateral and in case of default or fail to 
-follow agreements, the collateral could be sold to obtain the 
-money. In this agreement, a series contractual payment is used to 
-repay the mortgage. The contractual payments consist of repayment 
-of the mortgage and interest calculated over the outstanding debt. 
-The interest can be divided into two groups, one considers a fixed 
-interest rate and the other a non-fixed interest rate. The 
-interest rate determines the profit of het lender. 
+A mortgage is a legal agreement between two parties which include a loan and 
+a security in real property to secure the loan. The party that is providing 
+the loan is called the lender. The party that receives the loan called 
+the borrower. 
+The lender, for instance a bank, lends money to the borrower, in return 
+the right of mortgage over the collateral (the real property) is given to 
+the lender by the borrower.
+The loan is secured with the real property and in case of default 
+this collateral could be sold to payoff the outstanding debt. The time 
+until maturity, at which the outstanding debt needs to be paid, is 
+called the loan term. 
+Over the loan a certain amount of interest needs to be paid. In general, 
+mortgages can be divided into two categories. Fixed and variable 
+mortgages. For fixed mortgages, the interest rate is fixed over 
+(a predefined part of) the loan term. For variable mortgages the 
+interest over the loan changes periodically (mostly on a yearly basis).
 \\\\
-A lender takes several risks such as a failing payment of the 
-loanee or changing interest rates. Another risk is the loanee to 
-prepay. Repaying is paying a part of the borrowed money before the 
-agreed date of the scheduled payments. One speaks of partial 
+Banks sell different sort of mortgages. 
+One of the most common ones, is the annual mortgages.  
+In the loan agreement, a contractual payment schedule is included. 
+With these payments the outstanding debt is repaid. When the contractual
+payments are constant over the loan term, the mortgage is called 
+an annual mortgage. Each payment can therefore be split in a 
+interest bearing and a non-interest bearing part. The non-interest 
+bearing part of the outstanding loan is called unpaid principle 
+balance (abbreviated as UPB). If one knows the originate UPB, 
+the interest rate and the loan term, one can calculate the 
+outstanding debt for a fixed annual mortgage.  
+\\\\
+Besides the risk default and the interest rate market risk, 
+a specific risk for mortgages is the prepayment risk. A prepayment 
+occurs if the borrower is paying more to repay the loan, then there 
+was agreed upon in the contract. One speaks of partial 
 prepayment when a part of the outstanding debt is prepaid. 
-Likewise, a full prepayment is defined as prepaying the remaining 
-debt. There is a possibility for the lender to charge extra costs 
-for the prepayments. Both the interest and the scheduled payments 
-form the income on the lender. If the loanee decides to prepay, 
-the interest rate obtained becomes smaller and income decreases.  
+Likewise, a full prepayment is defined as prepaying the complete 
+outstanding debt before the end of the loan term. In the agreement 
+there is a possibility for the lender to charge extra costs for a prepayment. 
+Both the interest and the scheduled payments 
+form the income on the lender. If the borrower decides to prepay, 
+the interest rate incomes obtained can become smaller than expected, which 
+can have financial consequences for the bank due to the fixed loan terms
+and its possible liabilities. %This needs some other words I think. In dutch 
+% I would say "en de verplichtingen die hier uit voortvloeien"
+% I do not know for sure if this is clear now.  
 On small scales this gives no problems, however, instead of one 
-loanee, a bank can write mortgages to many loanees at once. This 
+mortgage loan, a bank has a whole portfolio of different loans. 
+Many prepayments can therefore affect the liabilities of the bank. This 
 can result in big losses in comparison to the expected income.  
 \\\\
-As behaviour of clients can be predicted, extra funds could be 
+By modelling the prepayment behavior of the borrowers, extra funds could be 
 kept separate to decrease risk without keeping unnecessary 
-reserves. In this report there is looked at open-source data 
-collected by FreddieMac and aimed to predict prepayments based on 
-this data. The prediction is based on lender level. We want to 
-predict prepayments in the next timestep for a given time. First, 
-the data is analysed in Section \ref{section_data_analysis}. In 
-which also the prepayment rule is derived. Followed by the model 
-and performance criteria in Section \ref{section_model}. Next, the 
-obtained results are shown in Section \ref{section_results}. Last, 
-a discussion is formed, consisting of a conclusion, improvements 
-and extensions of the model in Section \ref{section_discussion}.
+reserves. 
+This report shows a way of modelling this prepayment behavior. 
+Using open-source data collected by FreddieMac, the model aims to predict 
+the probabilities of borrower to prepay. 
 \\\\
-Special thanks to:\\
-Dr. D. Kurowicka (TUDelft)\\
-R. Tuinhof (Deloitte)\\
+To obtain a model for predicting the prepayments of the borrowers, 
+different steps were taken.
+First, the data is analysed in Section \ref{section_data_analysis}. In 
+this Section the prepayment definition is made more formal. Using this 
+definition, it is possible to classify the prepayments within the data set. 
+As the prepayments can be distinguished, an analysis is done to obtain 
+various drivers for the prepayment risk. Afterwards, the model is further 
+explained. A general description of the requirements of the model are given in 
+Section \ref{section_model}. In this report, the multinomial logistic regression 
+model is used to model the prepayments on a borrowers basis. Also the criteria 
+for addressing the performance of the model are discussed in this section.   
+Next, the obtained results are shown in Section \ref{section_results}. Lastly, 
+a discussion is given. In this discussion, a conclusion with respect to the 
+prepayment modeling is given. Besides this conclusion, the report also addresses 
+improvements, extensions and ideas for further research on the topic. 
+This discussion is given in Section \ref{section_discussion}.
+\\\\
+% Maybe this should be in a small section previously to the introduction. 
+As the report is a result of the narrow collaboration between the Technical 
+University of Delft and the company Deloitte, the writers of the report would 
+like to give a special thanks to:
+\\\\
+Dr. D. Kurowicka (Technical University Delft)  \\
+R. Tuinhof (Deloitte)                           \\
 R. van der Leij (Deloitte)
