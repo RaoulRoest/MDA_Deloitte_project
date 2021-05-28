@@ -157,3 +157,7 @@ Data/**/*.csv
 *.fdb_latexmk
 *.aux
 .Rproj.user
+*.run.xml
+*.blg
+*.bbl
+*.bcf
