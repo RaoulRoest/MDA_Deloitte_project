@@ -7,27 +7,25 @@ The contractual payments consist of repayment of the
 mortgage and interest calculated over the outstanding debt. 
 The interest can be divided into two groups, one considers a 
 fixed interest rate and the other a non-fixed interest rate. The 
-interest rate determines the profit of het lender. 
+interest rate determines the profit of the lender. 
 \\\\
-A lender takes several risks such as a failing payment of the loanee or 
-changing interest rates. Another risk is the loanee to prepay. Repaying 
+A lender takes several risks such as a failing payment of the borrower or 
+changing interest rates. Another risk, which is not obvious, is the borrower to prepay. Prepaying 
 is paying a part of the borrowed money before the agreed date of the 
 scheduled payments. One speaks of partial prepayment when a part of 
 the outstanding debt is prepaid. Likewise, a full prepayment is defined 
-as prepaying the remaining debt. There is a possibility for the lender 
+as prepaying the full amount of the outstanding debt. There is a possibility for the lender 
 to charge extra costs for the prepayments. Both the interest and the 
-scheduled payments form the income on the lender. If the loanee decides 
+scheduled payments determine the income on the lender. If the borrower decides 
 to prepay, the interest rate obtained becomes smaller and income 
-decreases.  On small scales this gives no problems, however, instead 
-of one loanee, a bank can write mortgages to many loanees at once. 
-This can result in big losses in comparison to the expected income.  
+decreases.  On small scales this is not problematic, however, when 
+considering the whole portfolio of a bank's borrowers, a this can result in big losses in comparison to the expected income.
 \\\\
 As behaviour of clients can be predicted, extra funds could be kept 
 separate to decrease risk without keeping unnecessary reserves. In this 
-report there is looked at open-source data collected by FreddieMac and 
-aimed to predict prepayments based on this data. The prediction is 
-based on lender level. We want to predict prepayments in the next 
-timestep for a given time. First, the data is analysed in Section 
+report we use open-source data, made available by FreddieMac and 
+we aim to predict the probability that a loan will be partially, fully or not prepaid at all, based on this data. Our model evaluates the probability of prepayments in the next 
+timestep based on the information available until that timestep. First, the data is analysed in Section 
 \ref{section_data_analysis}. In which also the prepayment rule is 
 derived. Followed by the model and performance criteria in Section 
 \ref{section_model}. Next, the obtained results are shown in 
