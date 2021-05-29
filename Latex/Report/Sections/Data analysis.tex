@@ -395,7 +395,7 @@ will be distinguished both on the originate data as on the monthly data.
 		    \caption{Classification of loans for years 2013-2020 with 
             threshold percentage of $\alpha = 0.1$. 
             The last column corresponds with the amount of 
-            clients that do both a partial prepayment and a 
+            clients that do both at least one partial prepayment and a 
             full prepayment.}
 		    \label{model_classficationprepayment_table}
         \end{table}
@@ -483,7 +483,8 @@ will be distinguished both on the originate data as on the monthly data.
         prepaid as the money required to make a prepayment is 
         less in comparison to a high UPB. To see if this is in 
         accordance with the data a boxplot consisting all 
-        sorts of prepayments is formed. In Figure 
+        sorts of prepayments is formed. This boxplot contains 
+        data of all the years.  In Figure 
         \ref{model_boxplot_UPB} one sees the UPB corresponding 
         to partial prepayments to be smaller than the UPB of no 
         prepayments. Which is in accordance with our last remark 
@@ -503,9 +504,11 @@ will be distinguished both on the originate data as on the monthly data.
             \label{model_boxplot_UPB}
         \end{figure}
         \noindent
-        The dependence of the UPB is determined with use of 
-        Kolmogorov Smirnov test, as well. In Table 
-        \ref{model_Pvals_of_UPB}, all $p$-values are zero and hence 
+        A two sample Kolmogorov Smirnov test (KS-test) is used to
+        determine wheter prepayment data is drawn from the same
+        distribution. The null hypothesis states that two samples are drawn from the same continuous distribution. A small $p$-value rejects the null hypothesis, while a large $p$-value does not reject the null hypothesis. The two sample KS-test makes use of a two sided alternative hypothesis. 
+        
+        In Table \ref{model_Pvals_of_UPB}, all $p$-values are zero and hence 
         the two samples are considered from different from different 
         distributions concerning the UPB. One have to note that in case of much data points 
         the null hypothesis is more often rejected then for less data points. 
