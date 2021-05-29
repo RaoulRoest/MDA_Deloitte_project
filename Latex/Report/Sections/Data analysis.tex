@@ -1,60 +1,179 @@
-In this section, preparation work is completed. First, the data is 
-cleaned and analysed. Followed by observation in the data. Next, the 
-derivation of the prepayments is shown.  
+To be able to model the prepayment risk for the lender, the behavior of 
+the borrower will be modelled based on given data. In this report
+the open source data provided by FreddieMac will be used. This data 
+set contains mortgage information of the bank FreddieMac over the time interval
+start 2013 until september 2020. In general the data set is  anonymized. This
+will mean that there will be no personal information within the data set. However, 
+data that cannot be referred to the specific persons in the data set will be included.
+\\\\
+As the data contains the information of the clients of the FreddieMac bank, in 
+the report, the borrower will be referred as clients. In general the report will 
+address all the data provided by FreddieMac as 'the data set'. Moreover, the 
+data set can be distinguished into two categories. First of all there is data 
+with respect to the moment the mortgage is closed. This data is not time 
+dependent and will be referred to as the originate data. On the other hand 
+there is the data that corresponds to the monthly developments of the 
+mortgages. This part of the data set will be referred to as the monthly 
+data.
+\\\\
+To extract meaningfully information from the data set, the report addresses 
+the data analysis in several steps. First the report will go in some 
+further depth on what is in the data set. After this, the report will 
+continue with some elaboration about the way the data will be cleaned. 
+From the cleaned data, the prepayment categories can be derived. Using the 
+found prepayment categories, the risk drivers for the prepayment risk 
+will be distinguished both on the originate data as on the monthly data.  
 
 \subsection{Data description}
-    The data collected by FreddieMac consist of two files, a loan 
-    originating file and a monthly payment file. FreddieMac continuously 
+    The data collected by FreddieMac consist of different files. 
+    For each year, there is a given originate data file and a monthly 
+    data file. FreddieMac continuously 
     updates and corrects the files to keep them up to date. 
-    In this report, sample data of years 2013-2020 is used in which 
-    each year corresponds to 50000 loans (with an exception for 2020). 
-    The origination file corresponds to the origin of the loan and thus 
-    loanee. This data does not change over time. The origination file 
-    consists of 31 characteristics of a loan: credit score (FICO), 
-    first payment date, first time homebuyer flag, maturity date, 
-    Metropolitan statistical area (MSA), mortgage insurance percentage, 
-    number of units, occupancy status, original combined loan-to-value 
-    (CLTV), original debt-to-income rate (DTI), original UPB, original 
-    loan-to-value (LTV), original interest rate, channel, prepayment 
-    penalty mortgage flag (PPM), amortization type, property state, 
-    property type, postal code, loan sequence number, loan purpose, 
-    original loan term, number of loanees, seller name, servicer name, 
-    super conforming flag, pre-HARP loan sequence number, 
-    program indicator HARP indicator, property valuation method 
-    and interest only indicator. For an explanation of the 
-    characteristics see user guide provided by FreddieMac. Not all 
-    these characteristics are relevant to predict future prepayment and 
-    some are removed out of the data. Pre-HARP, HARP indicator 
-    and interest only indicator are removed.
+    In this report, not the total data set of the FreddieMac open source 
+    set is used. 
+    A sample of the data over the years (february) 2013 until (september) 2020 
+    is used. For each year the sample contains approximately 50000 loans.
+    Only the year 2020 does not contain that many loans, as this data is 
+    not from a full year.
+    The originate data consists of 31 characteristics of a loan:
+    \begin{itemize}
+        \item credit score (which will be referred as "FICO"), 
+        \item first payment date, 
+        \item first time home buyer flag, 
+        \item maturity date, 
+        \item Metropolitan statistical area (which will be referred as "MSA"), 
+        \item mortgage insurance percentage,
+        \item  number of units, 
+        \item occupancy status, 
+        \item original combined loan-to-value (which will be referred as "CLTV"), 
+        \item original debt-to-income rate (which will be referred as "DTI"), 
+        \item original UPB, 
+        \item original loan-to-value (which will be referred as "LTV"), 
+        \item original interest rate, 
+        \item channel, prepayment penalty mortgage flag (which will be referred as "PPM"), 
+        \item amortization type, property state, 
+        \item property type, postal code, 
+        \item loan sequence number, 
+        \item loan purpose, 
+        \item original loan term, 
+        \item number of loanees, 
+        \item seller name, servicer name, 
+        \item super conforming flag, 
+        \item pre-HARP loan sequence number, 
+        \item program indicator HARP indicator, 
+        \item property valuation method,
+        \item interest only indicator.
+    \end{itemize} 
+    For a much more detailed explanation of all those characteristics 
+    the reader can be referred to the User Guide provided by FreddieMac. 
+    % 
+    % We need some reference here. 
+    % 
     \\\\
-    Additional to the origination file, the monthly performance 
-    file is given. The monthly performance file consist of the data 
-    dependent on time and thus the monthly information of the loan. 
+    Additional to the originate data file, the monthly performances
+    are also combined in a file per year. This "monthly performances file" 
+    consist of the monthly development of the mortgages.  
+    This data is therefore dependent on time and thus yields the monthly 
+    information about the development of the loan. 
     The data of every loan is monthly determined from the first payment 
-    data until 2020. If the mortgage is fully repaid due to 
-    full prepayment or the maturity date is reached, the monthly 
-    performance of that loan is stopped. The monthly performance 
-    file consist of 30 characteristics: Loan sequence number, 
-    monthly reporting period, current actual UPB, current loan 
-    delinquency status, loan age, remaining months to legal maturity, 
-    repurchase flag, modification flag, zero balance code, zero 
-    balance effective date, current interest rate, current deferred 
-    UPB, due date of last pain instalment (DDLPI), MI recoveries, net 
-    sale  proceeds, non MI recoveries, expenses, legal costs, 
-    maintenance and preservation costs, taxes and insurance, 
-    miscellaneous expenses, actual loss calculation, modification cost, 
-    step modification flag, deferred payment plan, estimated loan to 
-    value (ELTV), zero balance removal UPB, delinquent accrued interest, 
-    delinquency due to disaster, loanee assistance status code. 
-    For an explanation of the characteristics see user guide provided 
-    by FreddieMac. Again, some characteristics are removed out of the 
-    data. In the monthly performance file, MI recoveries, net sale 
-    proceeds, non-MI recoveries, expenses, legal costs, maintenance 
-    and preservation costs, taxes and insurance, miscellaneous 
-    expenses, actual loss calculation and delinquent accrued interest 
-    are removed. 
+    date until september 2020. If the mortgage is fully repaid due to 
+    full prepayment at some date or the maturity date is reached, 
+    there will not be any more data of that loan available after this date.  
+    The monthly performance file consist of 30 characteristics: 
+    \begin{itemize}
+        \item Loan sequence number,
+        \item monthly reporting period, 
+        \item current actual UPB, 
+        \item current loan 
+        \item delinquency status, 
+        \item loan age, 
+        \item remaining months to legal maturity, 
+        \item repurchase flag, 
+        \item modification flag, 
+        \item zero balance code, zero 
+        \item balance effective date, 
+        \item current interest rate, 
+        \item current deferred 
+        \item UPB, 
+        \item due date of last pain instalment (DDLPI), 
+        \item MI recoveries, 
+        \item net sale  proceeds, 
+        \item non MI recoveries, 
+        \item expenses, 
+        \item legal costs, 
+        \item maintenance and preservation costs, 
+        \item taxes and insurance, 
+        \item miscellaneous expenses, 
+        \item actual loss calculation, 
+        \item modification cost, 
+        \item step modification flag,
+        \item deferred payment plan,
+        \item estimated loan to value (ELTV), 
+        \item zero balance removal UPB, 
+        \item delinquent accrued interest, 
+        \item delinquency due to disaster, 
+        \item loanee assistance status code
+    \end{itemize}
+    Also here, For a much more detailed explanation of all those characteristics,
+    the reader can be referred to the User Guide provided by FreddieMac.
+    \\\\        
+    Not all these characteristics are that relevant to predict a prepayment of the 
+    client in the future and some can therefore be removed from the data. 
+    Details on which characteristics will be removed and the corresponding 
+    reason for removing these characteristics will be given in the next subsection.
 
 \subsection{Data cleaning}
+    As the data set contains much information about all kinds of mortgages 
+    and clients, not all characteristics and specific mortgages will be 
+    useful for predicting the prepayments. For example, missing data and 
+    mortgages from which the outstanding debt is set to zero based on some 
+    administrational reason are not useful for predicting the prepayment 
+    probabilities. Hence this data will be removed from the data set. The 
+    process of removing not useful data will be referred as "data cleaning". 
+    \\\\  
+    At first, all columns with no values at all can be removed. 
+    The characteristics for which no data is provided in the data are: 
+    \begin{itemize}
+        \item pre-HARP
+    	\item Harp indicator
+    	\item Interest only indicator
+        \item mi recoveries
+        \item net sale proceeds
+        \item non mi recoveries
+        \item expenses
+        \item legal costs
+        \item maint pres costs
+        \item taxes ins costs
+        \item misc costs
+        \item actual loss
+        \item deliquent accrued interest
+    \end{itemize}
+    Besides the specific characteristics which do not have useful data 
+    to work with, also the mortgages from which not all data is provided
+    (or is reliable) will be removed. 
+    Mortgages that meet the following conditions, are removed. 
+    % fico == 9999
+    % Original Combined Loan-To-Value == 999
+    % Original Debt-To-Income Ratio == 999
+    % Original Loan-To-Value == 999
+    % Product type == _
+    % Prepayment penalty == ""
+    % Zero balance code > 1
+    \begin{itemize}
+        \item The FICO is not known.
+        \item The CLTV is not known.
+        \item The debt to income ratio is not known, 
+        \item The original loan to value is not known, 
+        \item The product type is not known, 
+        \item The prepayment penalty is not known, 
+        \item The zero balance code is greater than one (this 
+        includes all loans that were administrational set to zero, 
+        when no prepayment occurred).  
+    \end{itemize}
+    
+
+
+
 	Some irrelevant data is already removed out of the data, 
     however, there is still some cleaning to do. In both files some 
     characteristics of the loan are standardized if not available. 
