@@ -38,3 +38,40 @@ than the complete one.
         \caption{AUC and AIC values for different input parameters.}
         \label{ModelAICandAUC}
 \end{table}
+
+\subsection{Testing the model}
+    From the data set the originate data can be immediately be used 
+    as input for the model. Furthermore for some risk drivers over time 
+    a statistic at time $t$ is derived as described in Section 
+    \ref{subsec_model_descr}. Furthermore, at the time step $t$, 
+    there is determined whether or not there is a already a full prepayment 
+    before $t$ if there will be a prepayment after time $t$. Using this 
+    information, the model can be tested. First the loans for 
+    which there was a full prepayment before time $t$ are removed, 
+    since those loans cannot have a prepayment after time $t$. 
+    Next using the train set, the model is callibrated for 
+    predicting prepayments after time $t$ using the risk drivers 
+    selected (using the LASSO or using all risk drivers). 
+    Also in the test set all the full prepayments before time 
+    $t$ are removed. Now the predicting power of the model 
+    can be addressed by predicting the probabilities for the test set 
+    and compare the results with the known full prepayments after time 
+    $t$ obtained from the test set.
+    \\\\
+    The time step $t$ is obtained by using only at most 70 percent 
+    of the time steps available. From the data set it is known that 
+    the first date available is february 2013. The last available
+    date in the time dependent data is given by september 2020. 
+    Which means there is a total of 91 time steps available. 
+    From this it can be seen that $t$ is
+    \begin{equation}
+        0.7 \cdot 91 = 63.7,
+    \end{equation}
+    hence $t$ is set to 63, where the floor is taken to assure 
+    $t$ to be an integer.
+    \\\\
+    The different results of the models are given in Table 
+    \ref{ModelAICandAUC}. It can be seen that the model which 
+    is not using the LASSO reduction for the risk drivers 
+    performs better. Here, both the AUC and the AIC yield 
+    better values for the complete model.
