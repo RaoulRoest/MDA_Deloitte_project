@@ -381,7 +381,7 @@ will be distinguished both on the originate data as on the monthly data.
         \centering
             \begin{tabular}{c|c|c|c|c}
                 & \multicolumn{4}{c}{Number of loans} \\
-                Year&No Prepayment&Partial Prepayment&Full Prepayment&Partial \& Full prepayment  \\\hline
+                Year&No Prepayment&Partial Prepayment&Full Prepayment &Both Partial \& Full prepayment  \\\hline
                 2013 & 20783 & 4159 & 22136 & 2757\\
                 2014 & 17909 & 3082 & 26537 & 2293\\
                 2015 & 24027 & 3365 & 20811 & 1668 \\
@@ -392,7 +392,11 @@ will be distinguished both on the originate data as on the monthly data.
                 2020 & 24160 & 39 & 623 & 0 \\\hline
                 Total & 209732 & 19074 & 134996 & 9800
 		    \end{tabular}
-		    \caption{Classification of loans for years 2013-2020 with threshold percentage of 0.1.}
+		    \caption{Classification of loans for years 2013-2020 with 
+            threshold percentage of $\alpha = 0.1$. 
+            The last column corresponds with the amount of 
+            clients that do both a partial prepayment and a 
+            full prepayment.}
 		    \label{model_classficationprepayment_table}
         \end{table}
         Furthermore, it is noted that there are relative few 
@@ -401,14 +405,16 @@ will be distinguished both on the originate data as on the monthly data.
         is approximately
         \begin{equation}
             \dfrac{
-                2757 
+                22136  
             }{
                 49835
-            } \approx 0.055,
+            } \approx 0.44,
         \end{equation}
-        which is only 5.5 percent. From this it can be suggested that 
-        prepaying is an rare event. This is something to keep in mind 
-        for the modelling. 
+        which is almost 44 percent. From this it can be suggested that 
+        prepaying is not a rare event. As this is a sample of a greater 
+        data set provided by FreddieMac, this result should be compared 
+        with the greater data set. Within this report, it is assumed that
+        the sample is representative for the whole data set.  
         \\\\ 
         From the previous table, it can also be seen that the number of 
         prepayments (partial and full) decrease over time. This 
@@ -434,66 +440,163 @@ will be distinguished both on the originate data as on the monthly data.
         %
 
 \subsection{Importances of the data}
-    To ensure privacy, some characteristics of a loan and loanee are 
-    made general and hence difficult to work with. Some drivers of 
-    prepayment could be age and income of the loanee. Someone with a 
-    higher income is more likely to prepay, similar, someone older is 
-    more likely to have some extra money and thus possible prepay. 
-    However, these characteristics are not directly available in the 
-    data. Income is used to calculate several measures, but not given 
-    specifically. Age is never mentioned in the data although it is 
-    useful to predict prepayments.  
+    Before addressing the possible drivers of the prepayment risk, 
+    first a note is placed with the available data.  
+    As the data set is anonymized, some characteristics of the loans and 
+    clients are made general and hence could be more difficult to work with. 
+    Some drivers for the risk of prepayment could be 
+    for instance the age and the income of a certain client. 
+    Someone with a 
+    higher income is more likely to prepay, similarly, someone older is 
+    more likely to have some extra money and therefore has a higher 
+    probability to prepay. 
+    However, these sort characteristics are not directly available in the 
+    data.
+    For instance,
+    income is used to calculate several measures which are included in the
+    data, but not given specifically. 
+    Moreover, age is never mentioned in the data although it 
+    may be useful for predicting prepayments or simulating other 
+    characteristics over time.  
     \\\\
-    Although there is some relevant data missing, this data format is 
-    used in the remainder of the report.  However, there is something 
-    wrong with the starting lines of the monthly performance files. 
-    In some cases, the current UPB rounded to the nearest thousand. 
-    This results in some strange behavior of the payments of the 
-    loanees and need to be dealt with. There need to be set a bound to 
-    the classification of prepayments. This can be solved with use of a 
-    threshold as discussed later. 
-    \\\\
+    In the remainder of this section, the possible risk drivers 
+    for the prepayment risk will be discussed. Among these drivers, 
+    there are drivers that were derived from the personal information
+    of the client (e.g. the LTV) and some macro economic drivers. 
     Only a small selection of characteristics is discussed, other 
     characteristics behave similar in cases of no prepayment and 
-    prepayment. For a complete variable importance determination, 
-    see Section \ref{section_model}. 
+    prepayment. 
+    A more general approach of variable selection will  be discussed 
+    in Section \ref{section_model}, where the LASSO approach will
+    be discussed. 
     
-    \subsubsection{Original loan-to-value}
-        Some characteristics of a loan are obtained with similar data 
-        and thus might be dependent. For example, both LTV and CLTV 
-        are calculated using similar characteristics: 
-        \\\\
-        Some characteristics of a loan are obtained with similar data 
-        and thus might be dependent. For example, both LTV and CLTV 
-        are calculated using similar characteristics: 
-        \begin{align}
-            \text{LTV}&=
-            \frac{\text{Original loan amount}}{\text{Purchase price}}\\
-            \text{CLTV}&=
-            \frac{\text{Original loan amount}+\text{Secondary loan amount}}{\text{Purchase price}}\\
-            &\text{If } LTV \leq CLTV, CLTV \text{ is denoted as unavailable}
-        \end{align}
-        To discover the behaviour of LTV in case of partial and full 
-        prepayments, a boxplot is made. In Figure 
-        \ref{model_boxplot_LTV} the boxplot shows that there is 
-        significant difference in the behaviour of the LTV in cases of 
-        no prepayment compared to partial and full prepayments. Besides, 
-        performing a Kolmogorov Smirnov test and obtain the p-values as 
-        given in Table \ref{model_Pvals_of_LTV}. All p-values are zero 
-        implying independent data. A zero p-value could however, also 
-        correspond to too much data. 
+    \subsubsection{Original unpaid principal balance}
+        An important characteristic of a loan is the UPB.
+        The UPB considers the non-interest bearing part of the 
+        outstanding debt.  
+        This characteristic 
+        is used to calculate both LTV and CLTV. From the 
+        observations of CLTV and LTV it is expected that a loan 
+        with high UPB with small purchase price is more likely 
+        to be prepaid. This will be discussed in the next section. 
+        On the other hand, a low UPB is also likely to be 
+        prepaid as the money required to make a prepayment is 
+        less in comparison to a high UPB. To see if this is in 
+        accordance with the data a boxplot consisting all 
+        sorts of prepayments is formed. In Figure 
+        \ref{model_boxplot_UPB} one sees the UPB corresponding 
+        to partial prepayments to be smaller than the UPB of no 
+        prepayments. Which is in accordance with our last remark 
+        about the behavior of the UPB. On the other hand, the 
+        UPB corresponding to full prepayments turns out to be 
+        higher than the UPB of no prepayments. This is also 
+        observed in the behavior of LTV and CLTV (see 
+        for example Section \ref{orig_ltv}). 
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=\linewidth]{Figures/Boxplot_of_upb_[2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020]_.png}
+            \caption{
+                Boxplot of UPB for sample data. From left to right: 
+                No prepayment, Full prepayment, Partial prepayment 
+                and Full or Partial prepayment.
+                }
+            \label{model_boxplot_UPB}
+        \end{figure}
+        \noindent
+        The dependence of the UPB is determined with use of 
+        Kolmogorov Smirnov test, as well. In Table 
+        \ref{model_Pvals_of_UPB}, all $p$-values are zero and hence 
+        the two samples are considered from different from different 
+        distributions concerning the UPB. One have to note that in case of much data points 
+        the null hypothesis is more often rejected then for less data points. 
+        Hence too much data could also explain these $p$-values. 
         \begin{table}[H]
         \centering
             \begin{tabular}{lcl|c|c}
                 \multicolumn{3}{c|}{Prepayment type} 
                 & P-values& KS-statistic \\\hline
+                No Prepayment & \& & Full Prepayment & 0 & 0.068385\\
+                No Prepayment & \& & Partial Prepayment & 0 & 0.182088\\
+                No Prepayment & \& & Full or Partial Prepayment & 0 & 0.043719 \\
+                Full Prepayment & \& & Partial Prepayment & 0 & 0.238933
+		    \end{tabular}
+            \caption{
+                $p$-values of UPB (in which if both partial and full 
+                prepayments happen, it is denoted as full prepayment).
+                }
+	        \label{model_Pvals_of_UPB}
+        \end{table}
+        For all years separately, similar results are obtained.
+        It therefore suffices to just look at one year.  
+        By isolation the data of year 2013, Figure 
+        \ref{model_UPB_against_prepayment} is obtained. Here a smaller 
+        UPB results in more prepayments. Hence, UPB is an 
+        important characteristic to predict prepayments. 
+        \begin{figure}[H]
+            \centering
+            \begin{subfigure}{0.45\textwidth}
+                \includegraphics[width=\linewidth]{Figures/UPB againts Full prepayments.png}
+                \caption{
+                    UPB against Full prepayments.
+                    }
+                \label{model_UPB_against_full_prepayment}
+            \end{subfigure}
+            \begin{subfigure}{0.45\textwidth}
+                \includegraphics[width=\linewidth]{Figures/UPB againts Partial prepayments.png}
+                \caption{
+                    UPB against Partial prepayments.
+                    }
+                \label{model_UPB_against_partial_prepayment}
+            \end{subfigure}
+            \caption{
+                UPB against magnitude of prepayments.
+                }
+            \label{model_UPB_against_prepayment}
+        \end{figure}
+
+
+    \subsubsection{Original loan-to-value}\label{orig_ltv}
+        Some characteristics of a loan are based on the same information
+        and will therefore by likely to be dependent. 
+        For example, both LTV and CLTV 
+        are both calculated using the original loan amount
+        (which refers to the outstanding debt at the moment the 
+        mortgage is closed) and the purchase price of the underlying 
+        property. 
+        \begin{align}
+            \text{LTV}&=
+            \frac{\text{Original loan amount}}{\text{Purchase price}}\\
+            \text{CLTV}&=
+            \frac{\text{Original loan amount}+\text{Secondary loan amount}}{\text{Purchase price}}\\
+            &\text{If } \text{LTV} \leq \text{CLTV}, \text{CLTV} \text{ is denoted as unavailable}
+        \end{align}
+        This dependence needs to be considered when addressing these 
+        characteristics as risk drivers for the prepayment risk. 
+        To discover the behavior of LTV in case of partial and full 
+        prepayments, a boxplot is given. In Figure 
+        \ref{model_boxplot_LTV} the boxplot shows that there is 
+        significant difference in the behavior of the LTV in cases of 
+        no prepayment compared to partial and full prepayments. Besides, 
+        performing a Kolmogorov Smirnov test and obtain the $p$-values as 
+        given in Table \ref{model_Pvals_of_LTV}. All $p$-values are zero 
+        implying that the sample with only prepayment clients and the sample 
+        with clients that do not prepay come from different distributions 
+        concerning the LTV. One have to note that also here, 
+        in case of much data points the null hypothesis is more often 
+        rejected then for less data points. 
+        Hence too much data could also explain these $p$-values.  
+        \begin{table}[H]
+        \centering
+            \begin{tabular}{lcl|c|c}
+                \multicolumn{3}{c|}{Prepayment type} 
+                & $p$-values& KS-statistic \\\hline
                 No Prepayment & \& & Full Prepayment & 0 & 0.064475\\
                 No Prepayment & \& & Partial Prepayment & 0 & 0.091396\\
                 No Prepayment & \& & Full or Partial Prepayment & 0 & 0.048204 \\
                 Full Prepayment & \& & Partial Prepayment & 0 & 0.146167
 		    \end{tabular}
             \caption{
-                P-values of LTV (in which if both partial and full 
+                $p$-values for the LTV (in which if both partial and full 
                 prepayments happen, it is denoted as full prepayment).
                 }
 	        \label{model_Pvals_of_LTV}
@@ -512,14 +615,16 @@ will be distinguished both on the originate data as on the monthly data.
         \end{figure}
         Combining Figure \ref{model_boxplot_LTV} and Table 
         \ref{model_Pvals_of_LTV}, LTV can be considered as a 
-        potential risk driver and needs further investigation. As 
-        mentioned, one observes similar behaviour of the data through 
+        potential risk driver and needs further investigation. One 
+        observes similar behavior of the data through 
         the years. For further investigation, year 2013 is considered 
-        as individual, as all years give similar results.  
+        as a separate year. This is possible as all years give similar 
+        results.  
         \\\\
         In Figure \ref{model_LTV_against_prepayment} the loans in 
         which no prepayments are made are filtered out of the data. 
-        Higher magnitudes of LTV  observed, values around 80, which is 
+        From the figure, one can see that higher magnitudes of LTV  
+        observed, values around 80, which is 
         in accordance with Figure \ref{model_boxplot_LTV}. This figures 
         implies again that LTV could be a risk driver. 
         \begin{figure}[H]
@@ -601,84 +706,7 @@ will be distinguished both on the originate data as on the monthly data.
                 }
             \label{model_CLTV_against_prepayment}
         \end{figure}
-        
-    \subsubsection{Original unpaid principal balance}
-        Another important characteristic of a loan is the UPB, 
-        which denotes the value of the mortgage. This characteristic 
-        is used to calculate both LTV and CLTV. From the 
-        observations of CLTV and LTV it is expected that a loan 
-        with high UPB with small purchase price is more likely 
-        to be prepaid. However, a low UPB is also likely to be 
-        prepaid as the money required to make a prepayment is 
-        less in comparison to a high UPB. To see if this is in 
-        accordance with the data a boxplot consisting all 
-        sorts of prepayments is formed. In Figure 
-        \ref{model_boxplot_UPB} one sees the UPB corresponding 
-        to partial prepayments to be smaller than the UPB of no 
-        prepayments. Which is in accordance with our last remark 
-        about the behaviour of the UPB. On the other hand, the 
-        UPB corresponding to full prepayments turns out to be 
-        higher than the UPB of no prepayments. This is already 
-        observed in the behaviour of LTV and CLTV. 
-        \begin{figure}[H]
-            \centering
-            \includegraphics[width=\linewidth]{Figures/Boxplot_of_upb_[2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020]_.png}
-            \caption{
-                Boxplot of UPB for sample data. From left to right: 
-                No prepayment, Full prepayment, Partial prepayment 
-                and Full or Partial prepayment.
-                }
-            \label{model_boxplot_UPB}
-        \end{figure}
-        \noindent
-        The dependence of the UPB is determined with use of 
-        Kolmogorov Smirnov test, as well. In Table 
-        \ref{model_Pvals_of_UPB}, all p-values are zero and hence 
-        the data is independent. A zero p-value could however, also 
-        correspond to too much data. 
-        \begin{table}[H]
-        \centering
-            \begin{tabular}{lcl|c|c}
-                \multicolumn{3}{c|}{Prepayment type} 
-                & P-values& KS-statistic \\\hline
-                No Prepayment & \& & Full Prepayment & 0 & 0.068385\\
-                No Prepayment & \& & Partial Prepayment & 0 & 0.182088\\
-                No Prepayment & \& & Full or Partial Prepayment & 0 & 0.043719 \\
-                Full Prepayment & \& & Partial Prepayment & 0 & 0.238933
-		    \end{tabular}
-            \caption{
-                $p$-values of UPB (in which if both partial and full 
-                prepayments happen, it is denoted as full prepayment).
-                }
-	        \label{model_Pvals_of_UPB}
-        \end{table}
-        \noindent
-        By isolation the data of year 2013, Figure 
-        \ref{model_UPB_against_prepayment} is obtained. Here a smaller 
-        UPB results in more prepayments. Hence, UPB is an 
-        important characteristic to predict prepayments. 
-        \begin{figure}[H]
-            \centering
-            \begin{subfigure}{0.45\textwidth}
-                \includegraphics[width=\linewidth]{Figures/UPB againts Full prepayments.png}
-                \caption{
-                    UPB against Full prepayments.
-                    }
-                \label{model_UPB_against_full_prepayment}
-            \end{subfigure}
-            \begin{subfigure}{0.45\textwidth}
-                \includegraphics[width=\linewidth]{Figures/UPB againts Partial prepayments.png}
-                \caption{
-                    UPB against Partial prepayments.
-                    }
-                \label{model_UPB_against_partial_prepayment}
-            \end{subfigure}
-            \caption{
-                UPB against magnitude of prepayments.
-                }
-            \label{model_UPB_against_prepayment}
-        \end{figure}
-        
+
 \subsubsection{Original interest rate}
     At last, the behaviour of characteristic original interest rate is 
     considered. It is expected that in loans with a higher interest 
