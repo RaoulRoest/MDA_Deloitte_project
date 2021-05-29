@@ -21,24 +21,10 @@ number from the initial 197 to almost a quarter.
     respect all
 ]{CSV/FullCOefficients.csv}
     
-In Table \ref{ModelAICandAUC}, we can see that the reduced model, not only 
-performs worse in terms of AUC, but in addition, its AIC increases, 
-despite the reduction of parameters. This means that our reduced model's 
-likelihood has decreased and the fit of the reduced model is no better 
-than the complete one.
-    
-\begin{table}[H]
-    \centering
-        \begin{tabular}{c|c|c}
-        Model & AUC & AIC \\\hline
-        Complete Model & 0.8253303 & 70606\\
-        LASSO Reduced Model &  0.7838138 & 72473\\
-        
-	    \end{tabular}
-        \caption{AUC and AIC values for different input parameters.}
-        \label{ModelAICandAUC}
-\end{table}
-
+% 
+% This text needs to be replaced if the structure of the 
+% results is more clear.
+% 
 \subsection{Testing the model}
     From the data set the originate data can be immediately be used 
     as input for the model. Furthermore for some risk drivers over time 
@@ -71,7 +57,21 @@ than the complete one.
     $t$ to be an integer.
     \\\\
     The different results of the models are given in Table 
-    \ref{ModelAICandAUC}. It can be seen that the model which 
-    is not using the LASSO reduction for the risk drivers 
-    performs better. Here, both the AUC and the AIC yield 
-    better values for the complete model.
+    \ref{ModelAICandAUC}.
+    \begin{table}[H]
+        \centering
+            \begin{tabular}{c|c|c}
+            Model & AUC & AIC \\\hline
+            Complete Model & 0.8253303 & 70606\\
+            LASSO Reduced Model &  0.7838138 & 72473\\
+            
+            \end{tabular}
+            \caption{AUC and AIC values for different input parameters.}
+            \label{ModelAICandAUC}
+    \end{table}    
+    In Table \ref{ModelAICandAUC}, it can be seen that the 
+    reduced model, not only performs worse in terms of AUC, 
+    but in addition, its AIC increases, despite the reduction 
+    of parameters. This means that our reduced model's 
+    likelihood has decreased and the fit of the reduced model is no better 
+    than the complete one.
