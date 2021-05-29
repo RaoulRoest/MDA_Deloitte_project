@@ -1,28 +1,40 @@
-For the purposes of this report we have built two models. One, is the model utilising every variable we have had available, either from the original datasets provided, or the new ones we have created as mentioned in Section. The second one, utilises those that have remained non zero after applying LASSO regression. This way, we can make a comparison between the two.
+For the purposes of this report we have built two models. One, is the model 
+utilising every variable we have had available, either from the original 
+datasets provided, or the new ones we have created as mentioned in Section. 
+The second one, utilises those that have remained non zero after applying 
+LASSO regression. This way, we can make a comparison between the two.
+\\\\
+The variables that had non zero coefficients with lambda.1se in the LASSO 
+regression are 57. They include: cntUnits, cltv, dti, ltv, ppmtPnlty, 
+cntBorr, flagSc, flagFTHBY, occpyStsP, channelR, several states, servicer 
+and seller names and type of property. In total, they are 57, reducing the 
+number from the initial 197 to almost a quarter. 
 
-The variables that had non zero coefficients with lambda.1se in the LASSO regression are 57. They include: cntUnits, cltv, dti, ltv, ppmtPnlty, cntBorr, flagSc, flagFTHBY, occpyStsP, channelR, several states, servicer and seller names and type of property. In total, they are 57, reducing the number from the initial 197 to almost a quarter. 
 
-
-    \csvautolongtable[
-        table head=\caption{some table}\label{tab:some}\\\hline
-        \csvlinetotablerow\\\hline
-        \endfirsthead\hline
-        \csvlinetotablerow\\\hline
-        \endhead\hline
-        \endfoot,
-        respect all
-    ]{CSV/FullCOefficients.csv}
+\csvautolongtable[
+    table head=\caption{some table}\label{tab:some}\\\hline
+    \csvlinetotablerow\\\hline
+    \endfirsthead\hline
+    \csvlinetotablerow\\\hline
+    \endhead\hline
+    \endfoot,
+    respect all
+]{CSV/FullCOefficients.csv}
     
-In Table \ref{ModelAICandAUC}, we can see that the reduced model, not only performs worse in terms of AUC, but in addition, its AIC increases, despite the reduction of parameters. This means that our reduced model's likelihood has decreased and the fit of the reduced model is no better than the complete one.
+In Table \ref{ModelAICandAUC}, we can see that the reduced model, not only 
+performs worse in terms of AUC, but in addition, its AIC increases, 
+despite the reduction of parameters. This means that our reduced model's 
+likelihood has decreased and the fit of the reduced model is no better 
+than the complete one.
     
-    \begin{table}[H]
-        \centering
-            \begin{tabular}{c|c|c}
-            Model & AUC & AIC \\\hline
-            Complete Model & 0.8253303 & 70606\\
-            LASSO Reduced Model &  0.7838138 & 72473\\
-            
-		    \end{tabular}
-            \caption{AUC and AIC values for different input parameters.}
-	        \label{ModelAICandAUC}
-    \end{table}
+\begin{table}[H]
+    \centering
+        \begin{tabular}{c|c|c}
+        Model & AUC & AIC \\\hline
+        Complete Model & 0.8253303 & 70606\\
+        LASSO Reduced Model &  0.7838138 & 72473\\
+        
+	    \end{tabular}
+        \caption{AUC and AIC values for different input parameters.}
+        \label{ModelAICandAUC}
+\end{table}

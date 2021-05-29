@@ -1,8 +1,12 @@
-In the previous chapter, the data has been analysed. Now a model needs 
-to be chosen to estimate the probabilities of prepayment. In similar 
-instances, the multinomial logistic model is often used. Also, this 
-model is suggested by the company. For this reason this model is 
-chosen 
+Using the analysis of the data set, discussed in the previous 
+section, the model can be constructed. First, a discussion is given 
+about the requirements for the models. After this, the theoretical 
+framework around the model is given. In this framework the logistic 
+regression is considered. In the theoretical framework, also the 
+methodology with respect to addressing the performance is described.
+The logistic regression model is suggested by the company. 
+For this reason this model is chosen as main model to test with respect 
+to the data.  
 
 \subsection{Model Description}
     % Modelling the prepayment probabilities. 
@@ -25,15 +29,17 @@ chosen
     client over the given time horizon $T$. 
     \\\\ 
     % Getting the input data
-    The total data set can be splitted in two data sets, one for the 
-    client data given at the moment of take out of the mortgage 
-    (which will be referred at as
+    As described in Section \ref{section_data_analysis}, 
+    the total data set can be split in two data sets. One for the 
+    client data given at $t_0$ (which is referred at as
     the originate data set) and one which contains information of 
-    the mortgage over time (which will be referred to as the monthly 
+    the mortgage over time (which is referred to as the monthly 
     data set). For a client $i$ in $P$ the data provides certain 
-    information on the moment of take out of the mortgage; 
-    $x_1^i, \ldots, x_n^i$ and time dependent information $x_1^{t, i}, 
-    \ldots, x_m^{t, i}$. As for all the clients, the same procedure 
+    information at moment that the mortgage is closed. These variables
+    will be denoted as  $x_1^i, \ldots, x_n^i$ 
+    Also there is time dependent information, these variables will be 
+    denoted as  $x_1^{t, i}, \ldots, x_m^{t, i}$. As for all the clients, 
+    the same procedure 
     is used, the $i$ is omitted for convenience, hence 
     $x_k^i \equiv x_k$ and $x_l^{t, i} \equiv x_l^t$ for each 
     $k \in \{1, \ldots, n\}$ and $l \in \{1, 
@@ -51,25 +57,25 @@ chosen
     evaluations of the condition over all time steps will be aggregated 
     using some aggregation operator. To make this more clear, consider 
     the following example. Suppose a client $i \in P$ and the feature 
-    $x^t$, which describes if the prepayment type (i.e. no, partial or 
-    full) at time $t$. Now, consider the condition $c_k$:
+    $x^{t_i}$, which describes if the prepayment type (i.e. no, partial or 
+    full) at time $t_i$. Now, consider the condition $c_k$:
     \begin{equation}
-        c_k(x^t) = \left\{
+        c_k(x^{t_i}) = \left\{
         \begin{array}{l l l l l}
-            1 & \text{if there is a partial prepayment} \\ 
+            1 & \text{if there is a partial prepayment at time } t_i \\ 
             0 & \text{else}
         \end{array}
         \right.
     \end{equation}
-    Evaluating this condition, over all time steps up to the moment 
+    Evaluating this condition, over all time steps $t_i$ up to the moment 
     $t$ and summing over those evaluations, yield a new feature $x$. 
     This feature represents the count of partial prepayments up to time 
     $t$ for that client. Now $x$ can be used as a feature to predict 
     the prepayment probabilities for this client. 
     \\\\
     % Addressing the output
-    As described above, the output of the model will be probabilities 
-    which are related to the prepayment risk of a specific client. More 
+    As described above, the model returns prepayment probabilities 
+    (partial, full and no prepayment)for a specific client. More 
     specifically, suppose a random variable $Y$ which can take values in 
     $\{0, 1, 2\}$ where $Y=0$ is no prepayment, 
     $Y=1$ is a partial prepayment and $Y=2$ represents a full prepayment. 
