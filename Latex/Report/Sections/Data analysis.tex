@@ -310,31 +310,73 @@ will be distinguished both on the originate data as on the monthly data.
         can be classified in the data. 
  
     \subsubsection{Prepayment in the data}
-        Using the monthly data, the loan term and the original UPB 
-        amount, the payment schedule can be derived on a monthly basis. 
-        Using the sheduled payments and expression \eqref{upb_part}, 
-        the sheduled repayments of the UPB can be derived and 
+        Using the monthly data, the loan term and the original UPB, 
+        the payment schedule can be derived on a monthly basis. 
+        Using the scheduled payments and expression \eqref{upb_part}, 
+        the scheduled repayments of the UPB can be derived and 
         computed on a monthly basis.
         Denote the scheduled repaid UPB part at time $t_j$ as 
         $\hat{P}_{t_j}$ and denote the actual repaid UPB part 
         as $P_{t_j}$. Set a threshold percentage $\alpha$ 
-        to deal with some minor variations in $P_{t_j}$. 
-         
-        If the amount of repaid UPB is bigger 
-        than a threshold times the predefined monthly payment, 
-        the maturity data is not reached and if the number of days 
-        the loanee is delinquent is less than 30 days, then it is 
-        considered as a prepayment. The threshold ensures some 
-        freedom in the series of payments. For example, if the loanee 
-        does not pay in one month and pays double in the following 
-        month, it should not be considered as a prepayment. If the 
-        remaining debt after the prepayment becomes zero, it is 
-        considered as a full prepayment. Every other prepayment 
-        is denoted as partial prepayment. In Table 
+        to deal with some minor variations in $P_{t_j}$.
+        Now define the following mapping: 
+        \begin{equation}
+            \ppmFlagA = \left\{
+                \begin{array}{l l l l l }
+                    1 & \text{if} &
+                    P_{t_j} > (1 + \alpha) \hat{P}_{t_j} \\ 
+                    0 & \text{else}
+                \end{array}
+            \right.
+        \end{equation}
+        Using this mapping, a flag for the prepayments can 
+        be set. Then, if the full outstanding debt is paid
+        and $\ppmFlagA = 1$, then there is a full prepayment. 
+        Otherwise, if $\ppmFlagA = 1$ and the current 
+        UPB is greater than zero, it will be addressed as a 
+        partial prepayment. If $\ppmFlagA = 0$ then 
+        there is no prepayment. It is known that for the 
+        first 6 months the payment data is not reliable. 
+        Hence, $\ppmFlagA$ is adjusted for this. Only 
+        $P_{t_j}$ with $t_j > 6$ are included in the 
+        categorization of the prepayments. 
+        In the data, there is also an adjustment for delinquent 
+        clients, which have a default before $t_j$. 
+        Denote the delinquency status $d_{t_j}$ as
+        \begin{equation}
+            d_{t_j} = \left\{
+                \begin{array}{l l l l l}
+                    1 & \text{if} & \text{there is a default at } t_j \\
+                    0 & \text{else}
+                \end{array}
+            \right.
+        \end{equation}
+        Denote the cumulative delinquency status at $t_j$ as:
+        \begin{equation}
+            D_{t_j} = \displaystyle\sum_{k=1}^{j} d_{t_k}.
+        \end{equation}
+        Hence, if 
+        there is a default before time $t_j$ the adjusted 
+        $\ppmFlag$ is obtained as: 
+        \begin{equation}
+            \ppmFlag = \left\{
+                \begin{array}{l l r l l }
+                    1 & \text{if} & D_{t_j} > 0 & \text{and} &
+                    P_{t_j} > 2(1 + \alpha) \hat{P}_{t_j} \\ 
+                    1 & \text{if} & 
+                    P_{t_j} > 2(1 + \alpha) \hat{P}_{t_j} \\ 
+                    0 & \text{else}
+                \end{array}
+            \right.
+        \end{equation}
+        Using the $\ppmFlag$ and the amount of the outstanding
+        the prepayments can now be classified.  
+        In Table 
         \ref{model_classficationprepayment_table}, the number of 
-        loans with prepayments can be found. Loan consisting of 
-        no prepayments or full prepayments are appearing most in 
-        the sample data. 
+        loans with prepayments are given. 
+        From this table it can be seen that 
+        loans consisting of no prepayments or full prepayments 
+        are appearing most in the sample data.
         \begin{table}[H]
         \centering
             \begin{tabular}{c|c|c|c|c}
@@ -353,6 +395,20 @@ will be distinguished both on the originate data as on the monthly data.
 		    \caption{Classification of loans for years 2013-2020 with threshold percentage of 0.1.}
 		    \label{model_classficationprepayment_table}
         \end{table}
+        Furthermore, it is noted that there are relative few 
+        prepayments. For example in the year 2013, the percentage 
+        of prepayments with respect to all considered loans in that year
+        is approximately
+        \begin{equation}
+            \dfrac{
+                2757 
+            }{
+                49835
+            } \approx 0.055,
+        \end{equation}
+        which is only 5.5 percent. From this it can be suggested that 
+        prepaying is an rare event. This is something to keep in mind 
+        for the modelling. 
 
 \subsection{Time dependence of the data}
     As can seen in Table \ref{model_cleaned data_table}, sample data of 
