@@ -506,18 +506,25 @@ will be distinguished both on the originate data as on the monthly data.
         \noindent
         A two sample Kolmogorov Smirnov test (KS-test) is used to
         determine wheter prepayment data is drawn from the same
-        distribution. The null hypothesis states that two samples are drawn from the same continuous distribution. A small $p$-value rejects the null hypothesis, while a large $p$-value does not reject the null hypothesis. The two sample KS-test makes use of a two sided alternative hypothesis. 
+        distribution. The null hypothesis states that two samples
+        are drawn from the same continuous distribution. A small
+        $p$-value rejects the null hypothesis, while a large
+        $p$-value does not reject the null hypothesis. The two
+        sample KS-test makes use of a two sided alternative
+        hypothesis. For a large number of data point, the KS-test
+        might results in small $p$-value even though the data is
+        obtained from the same distribution. Because of this, the
+        data will be tested in smaller groups as well. 
         
         In Table \ref{model_Pvals_of_UPB}, all $p$-values are zero and hence 
-        the two samples are considered from different from different 
-        distributions concerning the UPB. One have to note that in case of much data points 
-        the null hypothesis is more often rejected then for less data points. 
-        Hence too much data could also explain these $p$-values. 
+        the two samples are considered from different 
+        distributions concerning the UPB. 
         \begin{table}[H]
         \centering
-            \begin{tabular}{lcl|c|c}
+            \begin{tabular}{lcl|c|c|c|c|c|c}
                 \multicolumn{3}{c|}{Prepayment type} 
-                & P-values& KS-statistic \\\hline
+                & \multicolumn{5}{c}{P-values}& \\
+                &&&1\%&5\%&10\%&20\%&50\%&100\%\\\hline
                 No Prepayment & \& & Full Prepayment & 0 & 0.068385\\
                 No Prepayment & \& & Partial Prepayment & 0 & 0.182088\\
                 No Prepayment & \& & Full or Partial Prepayment & 0 & 0.043719 \\
