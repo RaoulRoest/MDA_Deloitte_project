@@ -50,7 +50,8 @@ will be distinguished both on the originate data as on the monthly data.
         \item original UPB, 
         \item original loan-to-value (which will be referred as "LTV"), 
         \item original interest rate, 
-        \item channel, prepayment penalty mortgage flag (which will be referred as "PPM"), 
+        \item channel, prepayment penalty mortgage flag 
+        (which will be referred as "PPM"), 
         \item amortization type, property state, 
         \item property type, postal code, 
         \item loan sequence number, 
@@ -95,7 +96,7 @@ will be distinguished both on the originate data as on the monthly data.
         \item current interest rate, 
         \item current deferred 
         \item UPB, 
-        \item due date of last pain instalment (DDLPI), 
+        \item due date of last pain instalment (which will be referred as "DDLPI"), 
         \item MI recoveries, 
         \item net sale  proceeds, 
         \item non MI recoveries, 
@@ -108,7 +109,7 @@ will be distinguished both on the originate data as on the monthly data.
         \item modification cost, 
         \item step modification flag,
         \item deferred payment plan,
-        \item estimated loan to value (ELTV), 
+        \item estimated loan to value (which will be referred as "ELTV"), 
         \item zero balance removal UPB, 
         \item delinquent accrued interest, 
         \item delinquency due to disaster, 
@@ -170,18 +171,8 @@ will be distinguished both on the originate data as on the monthly data.
         includes all loans that were administrational set to zero, 
         when no prepayment occurred).  
     \end{itemize}
-    
-
-
-
-	Some irrelevant data is already removed out of the data, 
-    however, there is still some cleaning to do. In both files some 
-    characteristics of the loan are standardized if not available. 
-    These loans cannot be used to predict future prepayments and need 
-    to be removed out of the data. The loans corresponding to undefined 
-    data of characteristics FICO, CLTV, DTI, LTV, property type and PPM 
-    are removed out of the data. Besides, there is only interest for 
-    prepayment or matured mortgages, hence there is filtered on the 
+    As there is only interest for 
+    prepayment or matured mortgages, the data is filtered on the 
     zero-balance code. The zero-balance code is a code implying what 
     happened to the mortgage. A total of 373602 loans fitted to 
     predict prepayments is obtained, see Table 
@@ -203,22 +194,133 @@ will be distinguished both on the originate data as on the monthly data.
 		\end{tabular}
 		\caption{
             Number of loans for years 2013-2020 after 
-            cleaning the data.
+            cleaning the data. As the there is only 
+            data available for 2020 until september, 
+            the total amount of loans is a bit lower for 
+            2020. 
             }
 		\label{model_cleaned data_table}
     \end{table}
     
 \subsection{Prepayment derivation}
-    As mentioned, prepayment is defined as paying a part of a loan 
-    in advance. Before something can be seen as a prepayment, the 
-    original payment needs to be determined.
-    \input{../PreliminaryResults/ModellingChoices/Sections/PrePaymentComputations}
+    The prepayment is defined as repaying the more of the outstanding debt 
+    than was scheduled in the agreement. 
+    Hence, first the payment schedule has to be derived. 
     
+    \subsubsection{Obtain monthly payments in annuity mortgage}
+        Let $t_0$ be the moment at which the mortgage is closed.
+        Set $t_1$ equal to the first moment the client will repay a 
+        part of the outstanding debt. 
+        Let $t_n$ be the moment that the client will repay the last 
+        part of the outstanding debt. This moment can be derived 
+        from the first payment date and the loan term.
+        As a consequence, there will be $n$ payments. 
+        The payment schedule is given by payments:
+        \begin{equation}
+            B_{t_0}, \ldots, B_{t_n}
+        \end{equation}
+        over the moments $t_0, \ldots, t_n$. 
+        An annuity mortgage is characterize by its equal payments.
+        Hence the payments have the relation $B \equiv B_{t_j}$ for 
+        $j \in \{0, 1, \ldots, n\}$. 
+        Note that at $t_0$ there is no payments (as the mortgage is granted).
+        Let us denote the interest at time $t$ as $r_t$ for some time 
+        $t$. 
+        Since fixed mortgages are considered, the relation $r \equiv r_t$ 
+        holds for the interest rates. 
+        Assume a risk neutral market. 
+        When the loan is priced in the risk 
+        neutral market, the present value of the outstanding debt, should be 
+        equal to the loan at time $t_0$. Hence the relation,
+        \begin{equation}
+            L = B (1 + r)^{-t_1} + \ldots B (1 + r)^{-t_n}
+        \end{equation}
+        where $L$ is the granted loan, should hold. 
+        Using the geometric series, the value of each payment 
+        $B$ can be determined: 
+        \begin{equation}
+            B\left[
+                \displaystyle\sum_{j=1}^{n} \left(
+                    (1 + r)^{-1}
+                    \right)^{t_j}  
+            \right] = 
+            B\left[
+                \displaystyle\sum_{j=0}^{n} \left(
+                    (1 + r)^{-1}
+                    \right)^{t_j} - 1  
+            \right] = 
+            B \left[
+                \dfrac{
+                    1 - \left(
+                        \dfrac{1}{1 + r}
+                    \right)^{n+1}
+                    }
+                    {
+                        1 - \dfrac{1}{(1 + r)}
+                    } - 1
+            \right].
+        \end{equation}
+        From this the monthly payments $B$ can be determined: 
+        \begin{equation}
+            B = \dfrac{L}{
+                    \left[
+                        \dfrac{
+                            1 - \left(
+                                \dfrac{1}{1 + r}
+                            \right)^{n+1}
+                            }
+                            {
+                                1 - \dfrac{1}{(1 + r)}
+                            } - 1
+                    \right]        
+                }
+        \end{equation}
+        The term 
+        \begin{equation}
+            \dfrac{
+                1 - \left(
+                    \dfrac{1}{1 + r}
+                \right)^{n+1}
+                }
+                {
+                    1 - \dfrac{1}{(1 + r)}
+                } - 1
+        \end{equation}
+        will be called the monthly factor. 
+        Note that the interest rate given is a yearly based interest rate. 
+        The corresponding monthly rate can be calculated by: 
+        \begin{equation}
+            (1 + r)^{\frac{1}{12}}.
+        \end{equation} 
+
+        The outstanding debt $U_{t_j}$ at time $t_j$ is now given by,
+        \begin{equation}
+            U_{t_j} = B \left(
+                (1+r)^1 + (1 + r)^2 + \ldots + (1 + r)^{t_n - t_j}
+                \right)
+        \end{equation}
+        where $t_n$ is the last payment date. This yields a payment of the 
+        UPB at time $t_j$ of
+        \begin{equation}\label{upb_part}
+            U_{t_{j-1}} - U_{t_{j}} = 
+            B (1 + r)^{t_n - t_j + 1}  
+        \end{equation}
+        Using the payment schedule and the corresponding derivation of 
+        the repaid non-interest rate bearing part, the prepayments 
+        can be classified in the data. 
+ 
     \subsubsection{Prepayment in the data}
-        Now, calculating the original payments and thus what the 
-        prepayment is, is discussed. This needs to be applied to 
-        the monthly performance data. The amount paid at a month 
-        is calculated for every month. If the amount paid is bigger 
+        Using the monthly data, the loan term and the original UPB 
+        amount, the payment schedule can be derived on a monthly basis. 
+        Using the sheduled payments and expression \eqref{upb_part}, 
+        the sheduled repayments of the UPB can be derived and 
+        computed on a monthly basis.
+        Denote the scheduled repaid UPB part at time $t_j$ as 
+        $\hat{P}_{t_j}$ and denote the actual repaid UPB part 
+        as $P_{t_j}$. Set a threshold percentage $\alpha$ 
+        to deal with some minor variations in $P_{t_j}$. 
+         
+        If the amount of repaid UPB is bigger 
         than a threshold times the predefined monthly payment, 
         the maturity data is not reached and if the number of days 
         the loanee is delinquent is less than 30 days, then it is 
