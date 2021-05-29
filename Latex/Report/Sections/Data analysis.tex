@@ -409,22 +409,29 @@ will be distinguished both on the originate data as on the monthly data.
         which is only 5.5 percent. From this it can be suggested that 
         prepaying is an rare event. This is something to keep in mind 
         for the modelling. 
-
-\subsection{Time dependence of the data}
-    As can seen in Table \ref{model_cleaned data_table}, sample data of 
-    every year consist of roughly 50000 loans. The exception is 2020 as 
-    this is involves recent loans and first the data needs to be 
-    gathered. For every year similar behaviour of prepayments is 
-    observed. However, there is some nuance. As time goes by, more 
-    loanees starts to prepay. Loanees getting a mortgage in 2013 are 
-    more likely to have prepaid an amount than loanees with a mortgage 
-    originating of 2020. This does however not change the potential 
-    risk drivers. During these years, nothing special happened which 
-    had a large impact on the economic system. Note, only a small part 
-    of 2020 is considered. In general, one can assume the behaviour 
-    to be similar through the years.
-    
-    % \textcolor{red}{Picture over the years!}
+        \\\\ 
+        From the previous table, it can also be seen that the number of 
+        prepayments (partial and full) decrease over time. This 
+        phenomena is due to the time dependence of the prepayment 
+        incentive of the client. As both the client's and the macro 
+        economic circumstances change over time, the incentive for 
+        the client to prepay will  be time dependent. Hence it is 
+        expected that there are fewer prepayments at a time step $t_j$ 
+        close to $t_0$ and the number of prepayments increase over 
+        time. The number of prepayments is a cumulative count, and hence 
+        will only increase. As a consequence, portfolios containing 
+        mortgages that were closed earlier in time (for example 2013)
+        will contain more prepayments than portfolios containing more 
+        recent mortgages (for instance 2019). This time dependence is 
+        also a phenomena that should be addressed in the modelling.
+        For this reason, it is assumed that for a total portfolio 
+        the number of prepayments over a specific time interval is 
+        equal upon an random error with expected value zero.
+        
+        %
+        % Some picture here
+        % \textcolor{red}{Picture over the years!}
+        %
 
 \subsection{Importances of the data}
     To ensure privacy, some characteristics of a loan and loanee are 
