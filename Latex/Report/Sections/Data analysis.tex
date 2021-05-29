@@ -649,13 +649,16 @@ will be distinguished both on the originate data as on the monthly data.
     
     \subsubsection{Original combined loan-to-value}
         As stated, both CLTV and LTV are calculated in similar ways. 
-        To study the behaviour of CLTV in case of partial and full 
+        To study the behavior of CLTV in case of partial and full 
         prepayments, a boxplot is made. In Figure \ref{model_boxplot_CLTV} 
-        one obverses a difference in behaviour. This behaviour is tested 
+        one obverses a difference in behavior. This behavior is tested 
         using Kolmogorov Smirnov test as well, the obtained $p$-values 
         can be found in Table \ref{model_Pvals_of_CLTV}. All $p$-values 
-        are zero which suggest independent data. A zero $p$-value could 
-        however, correspond to too much data, as well.
+        are zero which suggests that both samples come from the 
+        same distribution with respect to the CLTV. 
+        A similar argument for the zero $p$-values could 
+        be given with respect to the amount of data points as was mentioned 
+        by LTV and the original UBP.
         \begin{table}[H]
         \centering
             \begin{tabular}{lcl|c|c}
@@ -672,9 +675,8 @@ will be distinguished both on the originate data as on the monthly data.
                 }
 	        \label{model_Pvals_of_CLTV}
         \end{table}
-        Further investigating year 2013 one observes similar behaviour 
-        for CLTV, see Figure \ref{model_CLTV_against_prepayment}. 
-        This behavior is similar as with LTV.
+        Also here, for the year 2013 one observes similar behavior 
+        for CLTV as for the LTV, see Figure \ref{model_CLTV_against_prepayment}. 
         \begin{figure}[H]
             \centering
             \includegraphics[width=\linewidth]{Figures/Boxplot_of_cltv_[2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020]_.png}
