@@ -1,18 +1,18 @@
 A mortgage is a legal agreement between two parties which include a loan and 
 a security in real property to secure the loan. The party that is providing 
-the loan is called the lender. The party that receives the loan called 
+the loan is called the lender. The party that receives the loan is called 
 the borrower. 
-The lender, for instance a bank, lends money to the borrower, in return 
+The lender, for instance a bank, lends money to the borrower and in return,
 the right of mortgage over the collateral (the real property) is given to 
 the lender by the borrower.
-The loan is secured with the real property and in case of default 
-this collateral could be sold to payoff the outstanding debt. The time 
+The loan is secured with the property and in case of default 
+this collateral could be sold to pay off the outstanding debt. The time 
 until maturity, at which the outstanding debt needs to be paid, is 
 called the loan term. 
-Over the loan a certain amount of interest needs to be paid. In general, 
-mortgages can be divided into two categories, fixed and variable 
-mortgages. For fixed mortgages, the interest rate is fixed over 
-(a predefined part of) the loan term. For variable mortgages the 
+Over the duration of the loan a certain amount of interest needs to be paid. In general, 
+mortgages can be divided into two categories, fixed-rate and adjustable-rate
+mortgages. For fixed-rate mortgages, the interest rate is fixed over 
+(a predefined part of) the loan term. For adjustable-rate mortgages the 
 interest over the loan changes periodically (mostly on a yearly basis).
 \\\\
 Banks sell different sort of mortgages. 
@@ -20,10 +20,10 @@ One of the most common ones, is the annual mortgages.
 In the loan agreement, a contractual payment schedule is included. 
 With these payments the outstanding debt is repaid. When the contractual
 payments are constant over the loan term, the mortgage is called 
-an annual mortgage. Each payment can therefore be split in a 
+an annual mortgage. Each payment can therefore be split in an 
 interest bearing and a non-interest bearing part. The non-interest 
 bearing part of the outstanding loan is called unpaid principle 
-balance (abbreviated as UPB). If one knows the originate UPB, 
+balance (abbreviated as UPB). If one is aware of the UPB, 
 the interest rate and the loan term, one can calculate the 
 outstanding debt for a fixed annual mortgage.  
 \\\\
@@ -37,40 +37,40 @@ outstanding debt before the end of the loan term. In the agreement
 there is a possibility for the lender to charge extra costs for a prepayment. 
 Both the interest and the scheduled payments 
 form the income of the lender. If the borrower decides to prepay, 
-the interest rate incomes obtained can become smaller than expected, which 
-can have financial consequences for the bank due to the fixed loan terms
+the obtained interest rate income can become smaller than expected, which 
+can have financial consequences for the lender due to the fixed loan terms
 and its possible liabilities (\cite{jacobs2005modelling}). 
 %This needs some other words I think. In dutch 
 % I would say "en de verplichtingen die hier uit voortvloeien"
 % I do not know for sure if this is clear now.  
-On small scales this gives no problems, however, instead of one 
+On a small scale, one could think that it might not have an impact, however, instead of one 
 mortgage loan, a bank has a whole portfolio of different loans. 
 Many prepayments can therefore affect the liabilities of the bank. This 
 can result in big losses in comparison to the expected income.  
 \\\\
-As the bank has to finance the portfolio of mortgages, it will 
-be specifically interested in the prepayment risk over the portfolio.
+As the bank has to finance the portfolio of mortgages, it will
+specifically be interested in the prepayment risk over the portfolio.
 By modelling the prepayment behavior of the borrowers, extra funds could be 
 kept separate to decrease risk without keeping unnecessary 
 reserves (\cite{jacobs2005modelling}).
 Besides the lender, there is a more general interest to be able 
 to price the prepayment risk. As incorrect pricing of the prepayment risk 
-in mortgages also have consequences on the mortgage security market, it also 
+in mortgages also has consequences on the mortgage security market, it also 
 affects the interest rates (\cite{Chinloy1989}).  
 This report shows a way of modelling this prepayment behavior. 
 Using open-source data collected by FreddieMac, the model aims to predict 
 the probabilities of borrower to prepay. 
 \\\\
-To obtain a model for predicting the prepayments of the borrowers, 
+To obtain a model for predicting prepayment types of the borrowers, 
 different steps were taken.
 First, the data is analysed in Section \ref{section_data_analysis}. In 
-this Section the prepayment definition is made more formal. Using this 
+this Section the definition of a prepayment is made clear. Using this 
 definition, it is possible to classify the prepayments within the data set. 
-As the prepayments can be distinguished, an analysis is done to obtain 
+As the prepayments can be distinguished into Partial and Full, an analysis is done to obtain 
 various drivers for the prepayment risk. Afterwards, the model is further 
 explained. A general description of the requirements of the model are given in 
-Section \ref{section_model}. In this report, the multinomial logistic regression 
-model is used to model the prepayments on a borrowers basis. Also the criteria 
+Section \ref{section_model}. In this report, the multinomial logit 
+model is used to model the probabilities of the different prepayment types on a borrowers basis. Also the criteria 
 for addressing the performance of the model are discussed in this section.   
 Next, the obtained results are shown in Section \ref{section_results}. Lastly, 
 a discussion is given. In this discussion, a conclusion with respect to the 
@@ -79,10 +79,10 @@ improvements, extensions and ideas for further research on the topic.
 This discussion is given in Section \ref{section_discussion}.
 \\\\
 % Maybe this should be in a small section previously to the introduction. 
-As the report is a result of the narrow collaboration between the Technical 
-University of Delft and the company Deloitte, the writers of the report would 
-like to give a special thanks to:
-\\\\
-Dr. D. Kurowicka (Technical University Delft)  \\
-R. Tuinhof (Deloitte)                           \\
-R. van der Leij (Deloitte)
+% As the report is a result of the narrow collaboration between the Technical 
+% University of Delft and the company Deloitte, the writers of the report would 
+% like to give a special thanks to:
+% \\\\
+% Dr. D. Kurowicka (Technical University Delft)  \\
+% R. Tuinhof (Deloitte)                           \\
+% R. van der Leij (Deloitte)

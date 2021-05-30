@@ -1,20 +1,65 @@
-For the purposes of this report we have built two models. One, is the model utilising every variable we have had available, either from the original datasets provided, or the new ones we have created as mentioned in Section. The second one, utilises those that have remained non zero after applying LASSO regression. This way, we can make a comparison between the two.
+For the purposes of this report we have built two models. One, is the model 
+utilising every variable we have had available, either from the original 
+datasets provided, or the new ones we have created as mentioned in Section. 
+The second one, utilises those that have remained non zero after applying 
+LASSO regression. This way, we can make a comparison between the two.
+\\\\
+The variables that had non zero coefficients with lambda.1se in the LASSO 
+regression are 57. They include: cntUnits, cltv, dti, ltv, ppmtPnlty, 
+cntBorr, flagSc, flagFTHBY, occpyStsP, channelR, several states, servicer 
+and seller names and type of property. In total, they are 57, reducing the 
+number from the initial 197 to almost a quarter. 
 
-The variables that had non zero coefficients with lambda.1se in the LASSO regression are 57. They include: cntUnits, cltv, dti, ltv, ppmtPnlty, cntBorr, flagSc, flagFTHBY, occpyStsP, channelR, several states, servicer and seller names and type of property. In total, they are 57, reducing the number from the initial 197 to almost a quarter. 
 
-In Table \ref{ModelAICandAUC}, we can see that the reduced model, not only performs worse in terms of AUC, but in addition, its AIC increases, despite the reduction of parameters. This means that our reduced model's likelihood has decreased and the fit of the reduced model is no better than the complete one.
+\csvautolongtable[
+    table head=\caption{Coefficients of the Complete model}\label{tab:some}\\\hline
+    \csvlinetotablerow\\\hline
+    \endfirsthead\hline
+    \csvlinetotablerow\\\hline
+    \endhead\hline
+    \endfoot,
+    respect all
+]{CSV/FullCOefficients.csv}
+
+%\csvautotabular{CSV/FullCOefficients.csv}
     
-
-    \csvautolongtable[
-        table head=\caption{some table}\label{tab:some}\\\hline
-        \csvlinetotablerow\\\hline
-        \endfirsthead\hline
-        \csvlinetotablerow\\\hline
-        \endhead\hline
-        \endfoot,
-        respect all
-    ]{CSV/FullCOefficients.csv}
-
+% 
+% This text needs to be replaced if the structure of the 
+% results is more clear.
+% 
+\subsection{Testing the model}
+    From the data set the originate data can be immediately be used 
+    as input for the model. Furthermore for some risk drivers over time 
+    a statistic at time $t$ is derived as described in Section 
+    \ref{subsec_model_descr}. Furthermore, at the time step $t$, 
+    there is determined whether or not there is a already a full prepayment 
+    before $t$ if there will be a prepayment after time $t$. Using this 
+    information, the model can be tested. First the loans for 
+    which there was a full prepayment before time $t$ are removed, 
+    since those loans cannot have a prepayment after time $t$. 
+    Next using the train set, the model is calibrated for 
+    predicting prepayments after time $t$ using the risk drivers 
+    selected (using the LASSO or using all risk drivers). 
+    Also in the test set all the full prepayments before time 
+    $t$ are removed. Now the predicting power of the model 
+    can be addressed by predicting the probabilities for the test set 
+    and compare the results with the known full prepayments after time 
+    $t$ obtained from the test set.
+    \\\\
+    The time step $t$ is obtained by using only at most 70 percent 
+    of the time steps available. From the data set it is known that 
+    the first date available is february 2013. The last available
+    date in the time dependent data is given by september 2020. 
+    Which means there is a total of 91 time steps available. 
+    From this it can be seen that $t$ is
+    \begin{equation}
+        0.7 \cdot 91 = 63.7,
+    \end{equation}
+    hence $t$ is set to 63, where the floor is taken to assure 
+    $t$ to be an integer.
+    \\\\
+    The different results of the models are given in Table 
+    \ref{ModelAICandAUC}.
     \begin{table}[H]
         \centering
             \begin{tabular}{c|c|c}
@@ -22,7 +67,13 @@ In Table \ref{ModelAICandAUC}, we can see that the reduced model, not only perfo
             Complete Model & 0.8253303 & 70606\\
             LASSO Reduced Model &  0.7838138 & 72473\\
             
-		    \end{tabular}
+            \end{tabular}
             \caption{AUC and AIC values for different input parameters.}
-	        \label{ModelAICandAUC}
-    \end{table}
+            \label{ModelAICandAUC}
+    \end{table}    
+    In Table \ref{ModelAICandAUC}, it can be seen that the 
+    reduced model, not only performs worse in terms of AUC, 
+    but in addition, its AIC increases, despite the reduction 
+    of parameters. This means that our reduced model's 
+    likelihood has decreased and the fit of the reduced model is no better 
+    than the complete one.

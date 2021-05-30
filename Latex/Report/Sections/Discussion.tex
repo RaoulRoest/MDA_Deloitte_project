@@ -1,5 +1,10 @@
+
+In section 2 we first elaborated on the data to find and discuss some risk factors which can affect the probability of prepayments. We found that the original UPB, LTV, CLTV and the interest rate where potential risk drivers. We then did some further analysis on the risk incentive which gave a clear image from which we could conclude that the risk incentive was a risk driver. \\
+For the other variables, the Lasso model confirmed our hypothesis. Among the 57 variables there were also our variables of original UPB, LTV, CLTV and interest rate. 
+
+
 \subsection{Recommendation for further research}
-    As in this project only one model is used, there is no 
+    Since this report makes use of only one model, there is no 
     extensive research done on other models that could be 
     used for classification. For instance, a random forest 
     model or a neural network could also be possible models 
@@ -22,4 +27,19 @@
     make use of simulation to obtain estimates of client 
     specific information. One can think of estimating the 
     fico on a client level using copulas which depend
-    on client information. 
+    on client information.
+    \\\\
+    Furthermore, as noted before, the modelling is done 
+    with a selected sample of the available open-source 
+    data set provided by FreddieMac. An analysis between 
+    the sample set and the full data set should be done 
+    to determine if the sample is representable for the 
+    whole set. 
+    \\\\ 
+    As the LASSO seems not to give optimised results for 
+    selecting risk drivers, other methods of variable 
+    selection could be considered. Due to time constriction and the very specified goal of the assignment 
+    it was not possible to include this into this report. 
+    However, future analyses could try to use other models which
+    address variable importance to do variable selection. 
+    For example, a random forest could be used for this, stepwise regression or other available a;gorithms like boruta. 
