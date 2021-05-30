@@ -924,7 +924,7 @@ will be distinguished both on the originate data as on the monthly data.
     \label{Model_boxplot_current_upb_2013}
 \end{figure}
     
-    \subsubsection{estimated loan to value (ELTV)}
+    \subsubsection{Estimated loan to value (ELTV)}
     Another characteristic which is depended on time is the
     estimated loan to value (ELTV). Freddie Mac has provided an
     ELTV which
@@ -955,5 +955,36 @@ will be distinguished both on the originate data as on the monthly data.
     It is expected that borrowers paying there contractual payments
     without problems, prepay more often than borrowers with
     financial problems. To investigate this, the data is again
-    divided in two 
+    divided in two sets. First set contains the loan which are fully
+    prepaid and the second set contains the remaining loans. For
+    every loan the number of zero payments is counted as well as the
+    number of times a payment is made. As the data gives similar
+    results for every year, only one year is considered, namely
+    2013. In Figure \ref{Model_boxplot_nopayment_true_2013} a
+    boxplot is shown displaying the number of no payments. The
+    distribution is as expected. Full prepayments correspond to  a
+    lower number of months without payments. 
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=\linewidth]{Latex/Report/Figures/payment_true_2013.png}
+        \caption{Boxplot of number of \textbf{no} payments for sample data of 2013. On the left: Full prepayment and on the right: no Full prepayment}
+        \label{Model_boxplot_nopayment_true_2013}
+    \end{figure}
+    \noindent
+    Something similar is expected for the number of months in which
+    a payment takes places. It is expected that fully prepaid loans
+    have missed less contractual payments. This is the case as can
+    be seen in Figure \ref{Model_boxplot_nopayment_false_2013}. The
+    distribution of number of no payments has different
+    distributions for loan which are fully prepaid and the loan
+    which are not fully prepaid. Hence, the number of zero payments
+    can be used to predict future prepayments. Similarly, the number
+    of complied contractual payments can be seen as a risk driver. 
+    
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=\linewidth]{Latex/Report/Figures/payment_false_2013.png}
+        \caption{Boxplot of number of payments for sample data of 2013. On the left: Full prepayment and on the right: no Full prepayment}
+        \label{Model_boxplot_nopayment_false_2013}
+    \end{figure}
     
