@@ -1,4 +1,4 @@
-Using the analysis of the data set, discussed in the previous 
+Using the analysis of the data set discussed in the previous 
 section, the model can be constructed. First, a discussion is given 
 about the requirements for the models. After this, the theoretical 
 framework around the model is given. In this framework the logistic 
@@ -93,7 +93,7 @@ to the data.
 \subsection{Multinomial logistic model}
     For the purposes of this assignment, we used the multinomial logit model; 
     a generalisation of the binomial logistic regression for a target 
-    variable of more than two classes. In our case, the classes we have are three: No Prepayment, Partial Prepayment and Full Prepayment. We considered a nominal model instead of an ordinal one because, despite the fact that a Full Prepayment is a prepayment of higher magnitute than a Partial Prepayment, they are events that differ in nature. 
+    variable of more than two classes. In our case, the classes we have are three: No Prepayment, Partial Prepayment and Full Prepayment. We considered a nominal model instead of an ordinal one because, despite the fact that a Full Prepayment is a prepayment of higher magnitude than a Partial Prepayment, they are events that differ in nature. 
     
     We assume that our categories are encoded as 0 for No prepayment, 1 for Partial Prepayment and 2 for Full Prepayment. 0 is going to be our reference class. Therefore, our model will yield to logit functions, one for each of the other two classes and the probability of class 0 will be calculated by subtracting the sum of the two probabilities from 1.
     
@@ -122,7 +122,7 @@ to the data.
         L(\beta) = \sum_{j=1}^{n} y_{1i}g_1(x_i) + y_{2i}g_2(x_i) - ln(1 + e^{g_1(x)} + e^{g_2(x)})
     \end{equation}
     
-    By taking partial derivatives one can then compute the maximum likelihood and therefore the $\beta$ coefficients. 
+    By taking partial derivatives one can then compute the maximum likelihood and therefore the $\beta$ coefficients. \cite{logistic}
     
     
     % \textcolor{red}{(Theory part)}
@@ -233,7 +233,7 @@ to the data.
     For any pair of classes $i$ and $j$, we define $A(i|j)$ as the 
     probability that a randomly selected observation from the jth class 
     will have a lower estimated probability of belonging to class $i$ 
-    than a randomly drawn member of class $i$.
+    than a randomly drawn member of class $i$.\cite{handtill2010}
     \\\\
     For the two class case, obviously $A(i|j) = A(j|i)$. But it 
     doesn't generally hold.

@@ -12,7 +12,7 @@ number from the initial 197 to almost a quarter.
 
 
 \csvautolongtable[
-    table head=\caption{some table}\label{tab:some}\\\hline
+    table head=\caption{Coefficients of the Complete model}\label{tab:some}\\\hline
     \csvlinetotablerow\\\hline
     \endfirsthead\hline
     \csvlinetotablerow\\\hline
@@ -20,6 +20,8 @@ number from the initial 197 to almost a quarter.
     \endfoot,
     respect all
 ]{CSV/FullCOefficients.csv}
+
+%\csvautotabular{CSV/FullCOefficients.csv}
     
 % 
 % This text needs to be replaced if the structure of the 
@@ -35,7 +37,7 @@ number from the initial 197 to almost a quarter.
     information, the model can be tested. First the loans for 
     which there was a full prepayment before time $t$ are removed, 
     since those loans cannot have a prepayment after time $t$. 
-    Next using the train set, the model is callibrated for 
+    Next using the train set, the model is calibrated for 
     predicting prepayments after time $t$ using the risk drivers 
     selected (using the LASSO or using all risk drivers). 
     Also in the test set all the full prepayments before time 
