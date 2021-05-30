@@ -397,8 +397,10 @@ will be distinguished both on the originate data as on the monthly data.
             full prepayment.}
 		    \label{model_classficationprepayment_table}
         \end{table}
-        Furthermore, it is noted that there are relative few 
-        prepayments. For example in the year 2013, the percentage 
+        Furthermore, it is noted that in the data set, full prepayments 
+        seem to appear much more often than partial prepayments.
+        Also relatively, over all years there are much full prepayments.  
+        For example in the year 2013, the percentage 
         of prepayments with respect to all considered loans in that year
         is approximately
         \begin{equation}
@@ -905,50 +907,50 @@ will be distinguished both on the originate data as on the monthly data.
     dependent characteristics. These characteristics change over time instead of remaining constant.
     
     \subsubsection{Current UPB}
-    One important time dependent
-    characteristic is the current UPB. The current UPB changes
-    because of the contractual payments or due to prepayments. 
-    A smaller current UPB is more likely to be fully prepaid as
-    there is less money required. Such a statement cannot be made
-    for the partial prepayment. The data is divided in two parts,
-    one with full prepayments and the other consisting of loan
-    without full prepayments. The average current UPB turns out to
-    be around 184000. This value is used to compare the full
-    prepayments against the loan without prepayments. For every loan
-    it is counted how many times the current UPB is above the total mean. In Figure \ref{Model_boxplot_current_upb_2013}, a boxplot of the number of times the loan is above the average, is shown of year 2013. Every year gives similar results, hence only 2013 is considered. As expected, a full prepayment corresponds to a small number of large current UPB's. This could be seen as a risk driver. 
-    
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\linewidth]{Figures/current_upb_2013.png}
-    \caption{Boxplot of current UPB for sample data of 2013.  On the left: Full prepayment and on the right: no Full prepayment.}
-    \label{Model_boxplot_current_upb_2013}
-\end{figure}
+        One important time dependent
+        characteristic is the current UPB. The current UPB changes
+        because of the contractual payments or due to prepayments. 
+        A smaller current UPB is more likely to be fully prepaid as
+        there is less money required. Such a statement cannot be made
+        for the partial prepayment. The data is divided in two parts,
+        one with full prepayments and the other consisting of loan
+        without full prepayments. The average current UPB turns out to
+        be around 184000. This value is used to compare the full
+        prepayments against the loan without prepayments. For every loan
+        it is counted how many times the current UPB is above the total mean. In Figure \ref{Model_boxplot_current_upb_2013}, a boxplot of the number of times the loan is above the average, is shown of year 2013. Every year gives similar results, hence only 2013 is considered. As expected, a full prepayment corresponds to a small number of large current UPB's. This could be seen as a risk driver. 
+
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=\linewidth]{Figures/current_upb_2013.png}
+            \caption{Boxplot of current UPB for sample data of 2013.  On the left: Full prepayment and on the right: no Full prepayment.}
+            \label{Model_boxplot_current_upb_2013}
+        \end{figure}
     
     \subsubsection{estimated loan to value (ELTV)}
-    Another characteristic which is depended on time is the
-    estimated loan to value (ELTV). Freddie Mac has provided an
-    ELTV which
-    indicates estimated current LTV
-    (\cite{FredieMac}). Every year gives similar results for ELTV,
-    hence we only investigate the ELTV of year 2013. The data
-    is divided in loans that are prepaid fully and the
-    remaining loans. The ELTV has a mean of
-    approximately 79. The monthly data is compared to
-    this value and the number of observations of which
-    the ELTV is higher than the mean ELTV are
-    remembered. The obtained values are combined into
-    the boxplot given in Figure
-    \ref{Model_boxplot_eltv_2013}. In this figure one sees a more
-    dense ELTV for full prepayments with a similar average. 
-    Borrowers who are less times above the ELTV, fully prepay more often than others. 
-    
-    \begin{figure}[H]
-        \centering
-        \includegraphics[width=\linewidth]{Figures/eltv_2013.png}
-        \caption{Boxplot of ELTV for sample data of 2013.  On the left: Full prepayment and on the right: no Full prepayment.}
-        \label{Model_boxplot_eltv_2013}
-    \end{figure}
+        Another characteristic which is depended on time is the
+        estimated loan to value (ELTV). Freddie Mac has provided an
+        ELTV which
+        indicates estimated current LTV
+        (\cite{FredieMac}). Every year gives similar results for ELTV,
+        hence we only investigate the ELTV of year 2013. The data
+        is divided in loans that are prepaid fully and the
+        remaining loans. The ELTV has a mean of
+        approximately 79. The monthly data is compared to
+        this value and the number of observations of which
+        the ELTV is higher than the mean ELTV are
+        remembered. The obtained values are combined into
+        the boxplot given in Figure
+        \ref{Model_boxplot_eltv_2013}. In this figure one sees a more
+        dense ELTV for full prepayments with a similar average. 
+        Borrowers who are less times above the ELTV, fully prepay more often than others. 
+        
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=\linewidth]{Figures/eltv_2013.png}
+            \caption{Boxplot of ELTV for sample data of 2013.  On the left: Full prepayment and on the right: no Full prepayment.}
+            \label{Model_boxplot_eltv_2013}
+        \end{figure}
     
     \subsubsection{Zero payment}
-    Lastly, we consider the number of zero payments. 
+        Lastly, we consider the number of zero payments. 
     
