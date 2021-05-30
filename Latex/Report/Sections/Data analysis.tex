@@ -807,9 +807,9 @@ will be distinguished both on the originate data as on the monthly data.
     We can further investigate the interest rate as a risk factor. 
     Together with the originating and monthly payments files we 
     also have access to the Mortgage US 15 over all the weeks 
-    between 2013 an 2020. This gives us the fixed interest rate 
-    that US home-buyers would pay if they take out a loan lasting 
-    15 years at a certain time.
+    between 2013 an 2020. This gives us the market interest rates 
+    from which the fixed interest rate of the 30 and 40 years loans 
+    is derived. 
     \begin{figure}[H]
         \centering
         \includegraphics[scale=0.7]{Figures/mortgage15US.png}
@@ -818,20 +818,26 @@ will be distinguished both on the originate data as on the monthly data.
             }
         \label{mortgage15us}
     \end{figure}
-    The fixed interest rates for the beginning of a mortgage is 
-    given to us per week. To determine the fixed interest rate 
-    per month we take the maximum of the interest rates per week. 
-    This values are also close to the fixed interest rates for 
-    mortgages over 30 and 40 years, we can use this data to compare 
-    with the loans of 30 and 40 years in our data set.
+    The Mortgages US 15 years interest rate is given by week. 
+    To determine the fixed interest rate 
+    per month the maximum is taken over the interest rates per week.
+    As the 30 and 40 years fixed rates are derived from this 15 years
+    rate, they will follow the same trent. Hence, the 15 years 
+    maximum interest rate gives a good value to compare with 
+    the given fixed rates. If the 15 years rate decreases, there will 
+    be an incentive for the client to prepay his mortgage. 
+    The aggregated values for the Mortgage US 15 years will therefore 
+    be used for comparison with the fixed interest rates from the 
+    clients.
     \\\\
-    We would expect when the interest rate of a loan is higher then 
-    the fixed interest rate corresponding to that time, a client wants 
-    to fully prepay his mortgage and take a new one for the lower 
-    fixed interest rate. Of course the client must have the resources 
-    to fully pay-off his loan. When the borrower does not have the 
+    It is expected that when the interest rate of a loan is higher than 
+    the variable interest rate corresponding at that time, and if there is 
+    no penalty for prepaying, the client wants 
+    to fully prepay his mortgage and close a new mortgage for the lower 
+    fixed interest rate. The client must then have the resources 
+    to fully pay-off his loan. When the client does not have the 
     resources to fully prepay his mortgage, the client could make 
-    a partial prepayment. To see this incentive as a risk factor we 
+    a partial prepayment. To see this incentive as a risk factor, we 
     first make a new variable: \textit{the interest incentive}. 
     The interest incentive is defined as the current interest rate 
     of the loan minus the fixed interest for that given time. 
@@ -841,7 +847,7 @@ will be distinguished both on the originate data as on the monthly data.
     \ref{boxplots_incentive}. 
     \\\\
     The boxplots show that we can expect a significant difference in 
-    the behaviour of the interest incentive in months with no 
+    the behavior of the interest incentive in months with no 
     prepayment compared to full prepayments. We will further investigate this later. However, we do not notice an obvious difference between no 
     prepayments and the partial prepayments. On the contrary, there exists some degree of difference in the distribution of the full prepayment class. Therefore the interest incentive might play a role on the decision to fully prepay. If a client does not have enough 
     resources to fully prepay the loan, apparently it is not 
@@ -873,13 +879,11 @@ will be distinguished both on the originate data as on the monthly data.
             prepayment and Full or Partial prepayment.}
         \label{boxplots_incentive}
     \end{figure}
-        
     To further investigate the relation between full prepayments and 
-    the interest incentive we want to take a look at the observed 
+    the interest incentive, we want to take a look at the observed 
     prepayment ratio. This is the ratio between the amount of debt 
     which is full prepaid over all the loans and the total outstanding 
-    debt per month. This gives us a new variable which is unique per 
-    month. We can now take a look at the relation between this ratio 
+    debt per month. We can now take a look at the relation between this ratio 
     and the interest incentive. We would expect that when the 
     interest incentive goes up, this ratio will to. 
     \\\\
@@ -952,5 +956,10 @@ will be distinguished both on the originate data as on the monthly data.
         \end{figure}
     
     \subsubsection{Zero payment}
-        Lastly, we consider the number of zero payments. 
+        Lastly, we consider the number of zero payments. The number of
+        zero payments is dependent on time as it depends on the months.
+        It is expected that borrowers paying there contractual payments
+        without problems, prepay more often than borrowers with
+        financial problems. To investigate this, the data is again
+        divided in two 
     
