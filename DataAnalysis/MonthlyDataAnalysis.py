@@ -74,6 +74,17 @@ def count_flag_condtion(flagName, condition, dfCombine, dfOrig):
 
     return dfOrig
 
+import matplotlib as mpl
+def boxplot_features4b(df1,df2, featureList,column,name1,name2):
+    fig, ax = plt.subplots(1,1)
+    mpl.rcParams['font.size']=22
+    plt.boxplot([df1[column],df2[column]])
+    plt.xticks([1, 2],[name1, name2],fontsize=17)
+    plt.ylabel(column,fontsize=20)
+    gh.set_plot_params(ax,title="",xlabel="")
+    return fig
+
+
 def boxplot_flag_results(dfOrig, flagName, include=True):
     fppm = dfOrig[(dfOrig["prepayment_type"] == 2) & (dfOrig[flagName] > 0)].index.to_list()
 
@@ -81,25 +92,27 @@ def boxplot_flag_results(dfOrig, flagName, include=True):
         withPpm = dfOrig[dfOrig.index.isin(fppm) & dfOrig[flagName] > 0]
         whitoutPpm = dfOrig[~dfOrig.index.isin(fppm) & dfOrig[flagName] > 0]
 
-        title_ppm = f"With full prepayment and flag {flagName} count > 0"
-        title_no_ppm = f"With no full prepayment and flag {flagName} count > 0"
+        title_ppm = f"Full prepayment {flagName}"
+        title_no_ppm = f"No full prepayment {flagName}"
     
     else:
         withPpm = dfOrig[dfOrig.index.isin(fppm)]
         whitoutPpm = dfOrig[~dfOrig.index.isin(fppm)]
 
         title_ppm = f"With full prepayment"
-        title_no_ppm = f"With no full prepayment"
+        title_no_ppm = f"Without full prepayment"
 
     ncols = 2
     nrows = 1
     fig, axs = plt.subplots(ncols=ncols, nrows=nrows, figsize=(ncols*5, nrows*5))
-
+    
     withPpm.boxplot(flagName, ax=axs[0])
     whitoutPpm.boxplot(flagName, ax=axs[1])
+    
+    fig=boxplot_features4b(withPpm,whitoutPpm, [flagName],flagName,"With full","Without full")
 
-    axs[0].set_title(title_ppm)
-    axs[1].set_title(title_no_ppm)
+    #axs[0].set_title(title_ppm)
+    #axs[1].set_title(title_no_ppm)
     
     return fig
 
@@ -151,7 +164,8 @@ def plot_boxplot(dfOrig, flagName, include, directory="MonthlyDataAnalysis"):
     fig = boxplot_flag_results(dfOrig, flagName, include=include)
     plt.tight_layout()
     gh.save_plot(fig, f"{flagName}_WholePop_{not include}", directory)
-    plt.close(fig)
+    #plt.close(fig)
+
     
 
 def process_monthly_data(dfCombine, dfOrig, noNum_featureDict, num_featureDict, directroy):
@@ -186,10 +200,10 @@ def perform_analysis(years):
                          directroy=InputVariables.get_dir(years=years))
 
 if __name__ == "__main__":
-    ys = range(2013, 2021)
-    for y in ys:
-        logger.info(f"Run analysis for year: {y}")
-        perform_analysis([y])
+    ys = [2013]#range(2013, 2021)
+    # for y in ys:
+    #     logger.info(f"Run analysis for year: {y}")
+    #     perform_analysis([y])
         
     logger.info(f"Run analysis for all years")
     perform_analysis(ys)
